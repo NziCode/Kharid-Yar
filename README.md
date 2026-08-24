@@ -17,6 +17,10 @@ npm start
 
 سپس با Expo Go روی گوشی QR را اسکن کنید، یا `npm run android` را اجرا کنید.
 
+## ساخت APK بدون Expo EAS
+
+فایل workflow در `.github/workflows/android-apk.yml` قرار دارد. پس از قراردادن پروژه روی GitHub، از تب **Actions** گزینه‌ی **Build Android APK** و سپس **Run workflow** را بزنید. بعد از پایان موفق، APK از بخش **Artifacts** قابل دانلود است.
+
 ## مسیر درآمدی MVP
 
 - اشتراک «خریدیار پلاس» برای مقایسه قیمت و پیشنهادهای هوشمند
