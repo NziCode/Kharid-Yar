@@ -16,5 +16,8 @@
     "react-dom": "^19.0.0",
     "react-native": "0.79.2",
     "react-native-web": "^0.20.0"
+  },
+  "devDependencies": {
+    "@react-native-community/cli": "^18.0.0"
   }
 }
