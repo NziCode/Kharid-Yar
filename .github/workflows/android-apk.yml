@@ -40,8 +40,19 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build standalone release APK with Expo bundling
-        run: npx expo run:android --variant release --no-install
+      - name: Bundle JavaScript into Android APK
+        run: |
+          mkdir -p android/app/src/main/assets
+          npx react-native bundle \
+            --platform android \
+            --dev false \
+            --entry-file App.js \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
+
+      - name: Build standalone release APK
+        working-directory: android
+        run: ./gradlew clean assembleRelease
 
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4
