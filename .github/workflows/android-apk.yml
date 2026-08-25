@@ -37,6 +37,13 @@ jobs:
       - name: Generate native Android project
         run: npx expo prebuild --platform android --no-install --non-interactive
 
+      - name: Bundle JavaScript for standalone Android
+        run: |
+          mkdir -p android/app/src/main/assets
+          npx expo export:embed --platform android --entry-file App.js --dev false --minify false \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
