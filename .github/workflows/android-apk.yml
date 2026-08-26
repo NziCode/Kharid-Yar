@@ -48,18 +48,12 @@ jobs:
       - name: Build standalone release APK
         working-directory: android
         run: |
-          keytool -genkeypair -v \
-            -keystore "$RUNNER_TEMP/kharid-yar-release.jks" \
-            -storepass "kharid-yar-temp-pass" \
-            -alias "kharid-yar" \
-            -keypass "kharid-yar-temp-pass" \
-            -keyalg RSA -keysize 2048 -validity 10000 \
-            -dname "CN=NziCode, OU=Apps, O=NziCode, L=Tehran, S=Tehran, C=IR"
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$RUNNER_TEMP/kharid-yar-release.jks"
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file="$RUNNER_TEMP/kharid-yar-release.jks" \
-            -Pandroid.injected.signing.store.password="kharid-yar-temp-pass" \
-            -Pandroid.injected.signing.key.alias="kharid-yar" \
-            -Pandroid.injected.signing.key.password="kharid-yar-temp-pass"
+            -Pandroid.injected.signing.store.password="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            -Pandroid.injected.signing.key.alias="${{ secrets.ANDROID_KEY_ALIAS }}" \
+            -Pandroid.injected.signing.key.password="${{ secrets.ANDROID_KEY_PASSWORD }}"
 
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4
