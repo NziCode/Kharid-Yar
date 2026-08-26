@@ -34,29 +34,24 @@ jobs:
       - name: Install JavaScript dependencies
         run: npm ci
 
-      - name: Generate native Android project
-        run: npx expo prebuild --platform android --no-install --non-interactive
+      - name: Build web app
+        run: npm run build:web
+
+      - name: Create Capacitor Android project
+        run: |
+          npx cap add android
+          npx cap copy android
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Bundle JavaScript into Android APK
-        run: |
-          mkdir -p android/app/src/main/assets
-          npx react-native bundle \
-            --platform android \
-            --dev false \
-            --entry-file App.js \
-            --bundle-output android/app/src/main/assets/index.android.bundle \
-            --assets-dest android/app/src/main/res
-
       - name: Build standalone release APK
         working-directory: android
-        run: ./gradlew clean assembleRelease
+        run: ./gradlew assembleDebug
 
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4
         with:
           name: kharid-yar-standalone-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
