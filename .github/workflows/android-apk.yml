@@ -50,16 +50,16 @@ jobs:
         run: |
           keytool -genkeypair -v \
             -keystore "$RUNNER_TEMP/kharid-yar-release.jks" \
-            -storepass "kharid-yar-temp-store" \
+            -storepass "kharid-yar-temp-pass" \
             -alias "kharid-yar" \
-            -keypass "kharid-yar-temp-key" \
+            -keypass "kharid-yar-temp-pass" \
             -keyalg RSA -keysize 2048 -validity 10000 \
             -dname "CN=NziCode, OU=Apps, O=NziCode, L=Tehran, S=Tehran, C=IR"
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file="$RUNNER_TEMP/kharid-yar-release.jks" \
-            -Pandroid.injected.signing.store.password="kharid-yar-temp-store" \
+            -Pandroid.injected.signing.store.password="kharid-yar-temp-pass" \
             -Pandroid.injected.signing.key.alias="kharid-yar" \
-            -Pandroid.injected.signing.key.password="kharid-yar-temp-key"
+            -Pandroid.injected.signing.key.password="kharid-yar-temp-pass"
 
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4

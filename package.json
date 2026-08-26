@@ -15,8 +15,6 @@
     "@capacitor/core": "^7.4.0",
     "@capacitor/android": "^7.4.0",
     "@capacitor/cli": "^7.4.0",
-    "@fontsource/vazirmatn": "^5.2.6",
-    "lucide-react": "^0.468.0",
     "expo": "~53.0.0",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
