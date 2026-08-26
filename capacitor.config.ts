@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.kharidyar.app',
-  appName: 'Kharid Yar',
+  appName: 'خریدیار',
   webDir: 'dist',
   bundledWebRuntime: false
 };
