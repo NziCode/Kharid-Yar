@@ -1,16 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert, FlatList, Modal, Pressable, SafeAreaView, Share, StatusBar,
   StyleSheet, Text, TextInput, View,
 } from 'react-native';
 
 const initialLists = [
-  { id: 'home', name: 'خرید خانه', emoji: '🏠', items: [
-    { id: '1', name: 'شیر کم‌چرب', category: 'لبنیات', icon: '🥛', quantity: '۲ عدد', done: false },
-    { id: '2', name: 'نان سنگک', category: 'نان و غلات', icon: '🥖', quantity: '۱ عدد', done: true },
-    { id: '3', name: 'تخم مرغ', category: 'پروتئینی', icon: '🥚', quantity: '۱ شانه', done: false },
-  ] },
-  { id: 'work', name: 'لوازم شرکت', emoji: '💼', items: [] },
+  { id: 'home', name: 'خرید خانه', emoji: '🏠', items: [] },
 ];
 
 const defaultCategories = [
@@ -42,6 +38,24 @@ export default function App() {
   const [newListOpen, setNewListOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [onboarding, setOnboarding] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem('kharidyar-state').then((stored) => {
+      if (stored) {
+        const saved = JSON.parse(stored);
+        if (saved.userName) { setUserName(saved.userName); setOnboarding(false); }
+        if (saved.lists) setLists(saved.lists);
+        if (saved.categories) setCategories(saved.categories);
+        if (saved.history) setHistory(saved.history);
+      }
+      setHydrated(true);
+    }).catch(() => setHydrated(true));
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) AsyncStorage.setItem('kharidyar-state', JSON.stringify({ userName, lists, categories, history }));
+  }, [hydrated, userName, lists, categories, history]);
 
   const activeList = lists.find((list) => list.id === activeListId) || lists[0];
   const activeItems = activeList?.items || [];
@@ -93,6 +107,7 @@ export default function App() {
     Share.share({ message: `${activeList.name}\n${activeItems.map((item) => `• ${item.name} (${item.quantity})`).join('\n')}` });
   }
 
+  if (!hydrated) return <SafeAreaView style={s.safe}><View style={s.welcome}><Text style={s.welcomeEmoji}>🛒</Text><Text style={s.welcomeSub}>در حال آماده‌سازی…</Text></View></SafeAreaView>;
   if (onboarding) return (
     <SafeAreaView style={s.safe}>
       <View style={s.welcome}>
