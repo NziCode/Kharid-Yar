@@ -47,11 +47,23 @@ jobs:
 
       - name: Build standalone release APK
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: |
+          keytool -genkeypair -v \
+            -keystore "$RUNNER_TEMP/kharid-yar-release.jks" \
+            -storepass "kharid-yar-temp-store" \
+            -alias "kharid-yar" \
+            -keypass "kharid-yar-temp-key" \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=NziCode, OU=Apps, O=NziCode, L=Tehran, S=Tehran, C=IR"
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/kharid-yar-release.jks" \
+            -Pandroid.injected.signing.store.password="kharid-yar-temp-store" \
+            -Pandroid.injected.signing.key.alias="kharid-yar" \
+            -Pandroid.injected.signing.key.password="kharid-yar-temp-key"
 
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4
         with:
           name: kharid-yar-standalone-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
