@@ -2,6 +2,7 @@
   "expo": {
     "name": "خریدیار",
     "slug": "kharid-yar",
+    "icon": "./assets/app-icon.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
