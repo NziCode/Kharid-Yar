@@ -60,10 +60,11 @@ jobs:
             -Pandroid.injected.signing.store.password="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
             -Pandroid.injected.signing.key.alias="${{ secrets.ANDROID_KEY_ALIAS }}" \
             -Pandroid.injected.signing.key.password="${{ secrets.ANDROID_KEY_PASSWORD }}"
+          cp app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/KharidYar.apk
 
       - name: Upload standalone APK
         uses: actions/upload-artifact@v4
         with:
-          name: kharid-yar-standalone-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          name: KharidYar-Android
+          path: android/app/build/outputs/apk/release/KharidYar.apk
           if-no-files-found: error
