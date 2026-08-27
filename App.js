@@ -36,6 +36,7 @@ export default function App() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [newListOpen, setNewListOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [onboarding, setOnboarding] = useState(true);
   const [hydrated, setHydrated] = useState(false);
 
