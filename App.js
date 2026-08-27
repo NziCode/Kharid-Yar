@@ -45,7 +45,7 @@ export default function App() {
       if (storedValue) {
         const saved = JSON.parse(storedValue);
         if (saved.userName) { setUserName(saved.userName); setOnboarding(false); }
-        if (saved.lists) setLists(saved.lists);
+        if (Array.isArray(saved.lists) && saved.lists.length) setLists(saved.lists);
         if (saved.categories) setCategories(saved.categories);
         if (saved.history) setHistory(saved.history);
       }
@@ -57,7 +57,7 @@ export default function App() {
     if (hydrated && typeof localStorage !== 'undefined') localStorage.setItem('kharidyar-state', JSON.stringify({ userName, lists, categories, history }));
   }, [hydrated, userName, lists, categories, history]);
 
-  const activeList = lists.find((list) => list.id === activeListId) || lists[0];
+  const activeList = lists.find((list) => list.id === activeListId) || lists[0] || { id: 'home', name: 'خرید خانه', emoji: '🏠', items: [] };
   const activeItems = activeList?.items || [];
   const visibleItems = useMemo(() => activeItems.filter((item) => {
     const textMatch = !search.trim() || item.name.includes(search.trim());
