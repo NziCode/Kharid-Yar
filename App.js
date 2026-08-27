@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert, FlatList, Modal, Pressable, SafeAreaView, Share, StatusBar,
   StyleSheet, Text, TextInput, View,
@@ -41,9 +40,10 @@ export default function App() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.getItem('kharidyar-state').then((stored) => {
-      if (stored) {
-        const saved = JSON.parse(stored);
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('kharidyar-state') : null;
+    Promise.resolve(stored).then((storedValue) => {
+      if (storedValue) {
+        const saved = JSON.parse(storedValue);
         if (saved.userName) { setUserName(saved.userName); setOnboarding(false); }
         if (saved.lists) setLists(saved.lists);
         if (saved.categories) setCategories(saved.categories);
@@ -54,7 +54,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (hydrated) AsyncStorage.setItem('kharidyar-state', JSON.stringify({ userName, lists, categories, history }));
+    if (hydrated && typeof localStorage !== 'undefined') localStorage.setItem('kharidyar-state', JSON.stringify({ userName, lists, categories, history }));
   }, [hydrated, userName, lists, categories, history]);
 
   const activeList = lists.find((list) => list.id === activeListId) || lists[0];
