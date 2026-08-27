@@ -35,7 +35,9 @@ jobs:
         run: npm ci
 
       - name: Build web app
-        run: npm run build:web
+        run: |
+          npm run build:web
+          sed -i 's|src="/_expo/|src="./_expo/|g' dist/index.html
 
       - name: Create Capacitor Android project
         run: |
