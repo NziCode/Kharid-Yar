@@ -118,6 +118,15 @@ export default function App() {
         <TextInput value={nameDraft} onChangeText={setNameDraft} placeholder="نام شما" placeholderTextColor="#A2A6B4" style={s.welcomeInput} />
         <Pressable onPress={() => nameDraft.trim() && (setUserName(nameDraft.trim()), setOnboarding(false))} style={s.primaryButton}><Text style={s.primaryButtonText}>شروع کنیم 🚀</Text></Pressable>
       </View>
+      <Modal visible={contactOpen} transparent animationType="fade" onRequestClose={() => setContactOpen(false)}>
+        <View style={s.contactBackdrop}><View style={s.contactModal}>
+          <Pressable onPress={() => setContactOpen(false)}><Text style={s.close}>×</Text></Pressable>
+          <Text style={s.contactBrand}>NziCode</Text><Text style={s.contactName}>محمد علی نظری</Text>
+          <Text style={s.contactLine}>واتساپ: 09198433408</Text>
+          <Text style={s.contactLine}>ایمیل: nazari.moradkhani@gmail.com</Text>
+          <Text style={s.contactLine}>تلگرام: NziCode</Text>
+        </View></View>
+      </Modal>
     </SafeAreaView>
   );
 

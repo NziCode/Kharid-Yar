@@ -41,6 +41,7 @@ jobs:
         run: |
           npx cap add android
           npx cap copy android
+          npx capacitor-assets generate --android
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
