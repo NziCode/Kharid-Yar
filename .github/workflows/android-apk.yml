@@ -42,12 +42,19 @@ jobs:
           npx cap add android
           npx cap copy android
           sed -i -E "s/versionCode [0-9]+/versionCode $((GITHUB_RUN_NUMBER + 1))/g" android/app/build.gradle
-          mkdir -p android/app/src/main/res/mipmap-hdpi android/app/src/main/res/mipmap-mdpi android/app/src/main/res/mipmap-xhdpi android/app/src/main/res/mipmap-xxhdpi android/app/src/main/res/mipmap-xxxhdpi
-          cp assets/app-icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-          cp assets/app-icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-          cp assets/app-icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-          cp assets/app-icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-          cp assets/app-icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          for dpi in mipmap-hdpi mipmap-mdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
+            dir="android/app/src/main/res/$dpi"
+            mkdir -p "$dir"
+            cp assets/app-icon.png "$dir/ic_launcher.png"
+            cp assets/app-icon.png "$dir/ic_launcher_round.png"
+            cp assets/app-icon.png "$dir/ic_launcher_foreground.png"
+          done
+          # Android 8+ (API 26+) ignores the flat PNGs above and renders the
+          # adaptive icon defined in mipmap-anydpi-v26 instead, so without
+          # replacing ic_launcher_foreground too, the app keeps showing the
+          # default Capacitor icon on virtually every modern device.
+          echo '<?xml version="1.0" encoding="utf-8"?><color xmlns:android="http://schemas.android.com/apk/res/android" name="ic_launcher_background">#FFFFFF</color>' \
+            > android/app/src/main/res/values/ic_launcher_background.xml
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4

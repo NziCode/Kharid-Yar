@@ -14,6 +14,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import './web-fonts.css';
 
 /*
@@ -26,35 +27,37 @@ const FONT = 'Vazirmatn';
 const STORAGE_KEY = 'kharidyar-state-v4';
 const LEGACY_STORAGE_KEY = 'kharidyar-state-v3';
 
+// Colors come from the shared NziCode flat design system (design-system.js)
+// so this app and future NziCode apps stay visually consistent.
 const THEME = {
-  background: '#F5F6FB',
+  background: '#F3F3F8',
   surface: '#FFFFFF',
-  ink: '#17182A',
-  muted: '#7D8297',
-  faint: '#A7ADC0',
-  primary: '#6657E8',
-  primaryDark: '#4B3FC4',
-  primarySoft: '#ECEAFF',
-  accent: '#FF765F',
-  success: '#20B486',
-  successSoft: '#DDF8EE',
-  warning: '#F1B94B',
-  warningSoft: '#FFF5D9',
-  danger: '#E85D68',
-  dangerSoft: '#FFE8EA',
-  line: '#E8EAF1',
-  dark: '#26223F',
-  darkSoft: '#403861',
+  ink: '#14151F',
+  muted: '#71758A',
+  faint: '#A6A9BB',
+  primary: '#5B4FE9',
+  primaryDark: '#4238C4',
+  primarySoft: '#EEECFD',
+  accent: '#FF6B54',
+  success: '#1FAE7A',
+  successSoft: '#E3F8EF',
+  warning: '#E3A427',
+  warningSoft: '#FDF3DE',
+  danger: '#E5484D',
+  dangerSoft: '#FCE8E8',
+  line: '#E7E7EF',
+  dark: '#1D1B2E',
+  darkSoft: '#332F4E',
 };
 
 const DEFAULT_CATEGORIES = [
-  { id: 'dairy', label: 'لبنیات', emoji: '🥛' },
-  { id: 'produce', label: 'میوه و سبزی', emoji: '🥦' },
-  { id: 'protein', label: 'پروتئینی', emoji: '🥩' },
-  { id: 'pantry', label: 'خواربار', emoji: '🥫' },
-  { id: 'cleaning', label: 'شوینده', emoji: '🧼' },
-  { id: 'snacks', label: 'تنقلات', emoji: '🍪' },
-  { id: 'other', label: 'سایر', emoji: '📦' },
+  { id: 'dairy', label: 'لبنیات', emoji: 'cheese' },
+  { id: 'produce', label: 'میوه و سبزی', emoji: 'carrot' },
+  { id: 'protein', label: 'پروتئینی', emoji: 'drumstick-bite' },
+  { id: 'pantry', label: 'خواربار', emoji: 'wheat-awn' },
+  { id: 'cleaning', label: 'شوینده', emoji: 'soap' },
+  { id: 'snacks', label: 'تنقلات', emoji: 'cookie-bite' },
+  { id: 'other', label: 'سایر', emoji: 'box' },
 ];
 
 const NAV_ITEMS = [
@@ -66,15 +69,15 @@ const NAV_ITEMS = [
 ];
 
 const SMART_SUGGESTIONS = [
-  { id: 'breakfast', icon: '☀️', title: 'صبحانه‌ی این هفته', text: 'شیر، نان و تخم‌مرغ رو یادت نره.', items: ['شیر', 'نان', 'تخم‌مرغ'] },
-  { id: 'fresh', icon: '🥗', title: 'سبد تازه‌تر', text: 'چند میوه‌ی فصلی به سبدت اضافه کن.', items: ['سیب', 'موز'] },
-  { id: 'save', icon: '💡', title: 'خرید اقتصادی', text: 'اقلام تکراری را یک‌جا و عمده بخر.', items: ['دستمال کاغذی'] },
+  { id: 'breakfast', icon: 'sun', title: 'صبحانه‌ی این هفته', text: 'شیر، نان و تخم‌مرغ رو یادت نره.', items: ['شیر', 'نان', 'تخم‌مرغ'] },
+  { id: 'fresh', icon: 'leaf', title: 'سبد تازه‌تر', text: 'چند میوه‌ی فصلی به سبدت اضافه کن.', items: ['سیب', 'موز'] },
+  { id: 'save', icon: 'lightbulb', title: 'خرید اقتصادی', text: 'اقلام تکراری را یک‌جا و عمده بخر.', items: ['دستمال کاغذی'] },
 ];
 
 const DEMO_SCAN_ITEMS = [
-  { id: 'scan-milk', name: 'شیر کم‌چرب', emoji: '🥛', category: 'dairy', confidence: 96, quantity: '۱ عدد' },
-  { id: 'scan-apple', name: 'سیب قرمز', emoji: '🍎', category: 'produce', confidence: 91, quantity: '۱ کیلو' },
-  { id: 'scan-yogurt', name: 'ماست', emoji: '🥣', category: 'dairy', confidence: 87, quantity: '۱ عدد' },
+  { id: 'scan-milk', name: 'شیر کم‌چرب', emoji: 'cheese', category: 'dairy', confidence: 96, quantity: '۱ عدد' },
+  { id: 'scan-apple', name: 'سیب قرمز', emoji: 'apple-whole', category: 'produce', confidence: 91, quantity: '۱ کیلو' },
+  { id: 'scan-yogurt', name: 'ماست', emoji: 'bowl-rice', category: 'dairy', confidence: 87, quantity: '۱ عدد' },
 ];
 
 const DEMO_PANTRY = [];
@@ -117,7 +120,7 @@ const toLatinDigits = (value) => String(value ?? '')
 const normalizeItem = (item) => ({
   id: item.id || makeId('item'),
   name: item.name || item.title || 'کالای بدون نام',
-  emoji: item.emoji || '📦',
+  emoji: item.emoji || 'box',
   category: item.category || 'other',
   quantity: item.quantity || '۱',
   price: Number(item.price || item.estimatedPrice || 0),
@@ -129,7 +132,7 @@ const normalizeItem = (item) => ({
 const normalizeList = (list, index) => ({
   id: list.id || makeId('list'),
   name: list.name || list.title || `لیست ${index + 1}`,
-  emoji: list.emoji || list.icon || ['🏠', '🛒', '🎉', '🔧'][index % 4],
+  emoji: list.emoji || list.icon || ['house', 'cart-shopping', 'champagne-glasses', 'wrench'][index % 4],
   members: Number(list.members || 1),
   updatedAt: list.updatedAt || Date.now(),
   items: Array.isArray(list.items) ? list.items.map(normalizeItem) : [],
@@ -144,13 +147,13 @@ const createEmptyState = () => ({
   diet: 'بدون محدودیت',
   notifications: true,
   offline: true,
-  lists: [{ id: 'home', name: 'خرید خانه', emoji: '🏠', members: 1, updatedAt: Date.now(), items: [] }],
+  lists: [{ id: 'home', name: 'خرید خانه', emoji: 'house', members: 1, updatedAt: Date.now(), items: [] }],
   categories: DEFAULT_CATEGORIES,
   pantry: DEMO_PANTRY,
   receipts: [],
   history: [],
   family: {
-    members: [{ id: 'me', name: 'شما', role: 'مدیر', points: 0, emoji: '🙂' }],
+    members: [{ id: 'me', name: 'شما', role: 'مدیر', points: 0, emoji: 'user' }],
     comments: [],
   },
 });
@@ -164,7 +167,7 @@ const normalizeState = (saved) => {
     ? saved.categories.filter((category) => category.id !== 'all').map((category) => ({
       id: category.id || makeId('cat'),
       label: category.label || category.name || 'سایر',
-      emoji: category.emoji || '📦',
+      emoji: category.emoji || 'box',
     }))
     : fallback.categories;
   return {
@@ -220,39 +223,51 @@ const formatMoney = (value, currency) => {
 const getCategory = (categories, id) => categories.find((category) => category.id === id) || categories[categories.length - 1] || DEFAULT_CATEGORIES[DEFAULT_CATEGORIES.length - 1];
 
 const Icon = ({ name, size = 21, color = THEME.ink }) => {
-  const glyphs = {
-    menu: '☰',
-    back: '‹',
-    home: '⌂',
-    list: '☷',
-    scan: '⌾',
-    pantry: '▣',
-    profile: '♙',
-    plus: '＋',
-    search: '⌕',
-    share: '↗',
-    more: '•••',
-    check: '✓',
-    close: '×',
-    mic: '♩',
-    camera: '▣',
-    barcode: '▥',
-    receipt: '▤',
-    cart: '🛒',
-    settings: '⚙',
-    users: '♧',
-    clock: '◷',
-    arrow: '‹',
-    spark: '✦',
-    chevron: '›',
-    trash: '⌫',
-    edit: '✎',
-    bell: '♢',
-    cloud: '☁',
-    route: '⌁',
-    trophy: '♛',
+  // Central icon registry — FontAwesome6 names, used everywhere instead of
+  // unicode glyphs/emoji for crisp, consistent vector icons across the app.
+  const names = {
+    menu: 'bars',
+    back: 'chevron-right', // points right: RTL "back" reads toward the start (right)
+    home: 'house',
+    list: 'list-ul',
+    scan: 'camera-retro',
+    pantry: 'box-archive',
+    profile: 'user',
+    plus: 'plus',
+    search: 'magnifying-glass',
+    share: 'share-nodes',
+    more: 'ellipsis',
+    check: 'check',
+    close: 'xmark',
+    mic: 'microphone',
+    camera: 'camera',
+    barcode: 'barcode',
+    receipt: 'receipt',
+    cart: 'cart-shopping',
+    settings: 'gear',
+    users: 'users',
+    clock: 'clock',
+    arrow: 'chevron-left', // points left: RTL "forward" reads toward the end (left)
+    spark: 'wand-magic-sparkles',
+    chevron: 'chevron-left',
+    trash: 'trash',
+    edit: 'pen',
+    bell: 'bell',
+    cloud: 'cloud',
+    route: 'route',
+    trophy: 'trophy',
   };
-  return <Text style={{ color, fontSize: size, lineHeight: size + 4, fontFamily: FONT }}>{glyphs[name] || '•'}</Text>;
+  return <FontAwesome6 name={names[name] || 'circle'} size={size * 0.86} color={color} />;
+};
+
+// Renders a data-driven icon (used for category/list/pantry/item icons that
+// used to be free-form emoji). Accepts a FontAwesome6 icon name; falls back
+// to rendering literal text so any old saved emoji data still displays.
+const Glyph = ({ value, size = 20, color = THEME.ink, style }) => {
+  if (typeof value === 'string' && /^[a-z0-9-]+$/.test(value)) {
+    return <FontAwesome6 name={value} size={size} color={color} style={style} />;
+  }
+  return <Text style={[{ fontSize: size }, style]}>{value}</Text>;
 };
 
 const Button = ({ children, onPress, variant = 'primary', icon, style, disabled = false }) => (
@@ -280,7 +295,7 @@ const Pill = ({ children, active = false, onPress, emoji, style }) => (
     onPress={onPress}
     style={({ pressed }) => [styles.pill, active && styles.pillActive, pressed && styles.pressed, style]}
   >
-    {emoji ? <Text style={styles.pillEmoji}>{emoji}</Text> : null}
+    {emoji ? <Glyph value={emoji} size={14} color={active ? "#fff" : THEME.primary} style={styles.pillEmoji} /> : null}
     <Text style={[styles.pillText, active && styles.pillTextActive]}>{children}</Text>
   </Pressable>
 );
@@ -324,9 +339,9 @@ const ModalShell = ({ visible, onClose, title, children }) => (
   </Modal>
 );
 
-const EmptyState = ({ icon = '🛒', title, text, action, onAction }) => (
+const EmptyState = ({ icon = 'cart-shopping', title, text, action, onAction }) => (
   <View style={styles.emptyState}>
-    <Text style={styles.emptyIcon}>{icon}</Text>
+    <Glyph value={icon} size={34} color={THEME.faint} style={styles.emptyIcon} />
     <Text style={styles.emptyTitle}>{title}</Text>
     {text ? <Text style={styles.emptyText}>{text}</Text> : null}
     {action ? <Button onPress={onAction} icon="plus">{action}</Button> : null}
@@ -359,9 +374,9 @@ const App = () => {
   const [itemDraft, setItemDraft] = useState({ name: '', quantity: '۱', price: '', category: 'dairy' });
   const [entryTab, setEntryTab] = useState('manual');
   const [entryMessage, setEntryMessage] = useState('');
-  const [newListDraft, setNewListDraft] = useState({ name: '', emoji: '🛒' });
-  const [newCategoryDraft, setNewCategoryDraft] = useState({ label: '', emoji: '📦' });
-  const [pantryDraft, setPantryDraft] = useState({ name: '', quantity: '۱ عدد', expiry: '۷', emoji: '📦' });
+  const [newListDraft, setNewListDraft] = useState({ name: '', emoji: 'cart-shopping' });
+  const [newCategoryDraft, setNewCategoryDraft] = useState({ label: '', emoji: 'box' });
+  const [pantryDraft, setPantryDraft] = useState({ name: '', quantity: '۱ عدد', expiry: '۷', emoji: 'box' });
   const [receiptScanning, setReceiptScanning] = useState(false);
   const [scannerCaptured, setScannerCaptured] = useState(false);
   const [scannerItems, setScannerItems] = useState([]);
@@ -478,10 +493,10 @@ const App = () => {
   const createList = () => {
     const name = newListDraft.name.trim();
     if (!name) return;
-    const list = { id: makeId('list'), name, emoji: newListDraft.emoji || '🛒', members: 1, updatedAt: Date.now(), items: [] };
+    const list = { id: makeId('list'), name, emoji: newListDraft.emoji || 'cart-shopping', members: 1, updatedAt: Date.now(), items: [] };
     setLists((current) => [list, ...current]);
     setActiveListId(list.id);
-    setNewListDraft({ name: '', emoji: '🛒' });
+    setNewListDraft({ name: '', emoji: 'cart-shopping' });
     setModal(null);
     setView('detail');
   };
@@ -558,9 +573,9 @@ const App = () => {
       name: pantryDraft.name.trim(),
       quantity: pantryDraft.quantity || '۱ عدد',
       expiry: Number(toLatinDigits(pantryDraft.expiry)) || 0,
-      emoji: pantryDraft.emoji || '📦',
+      emoji: pantryDraft.emoji || 'box',
     }, ...current]);
-    setPantryDraft({ name: '', quantity: '۱ عدد', expiry: '۷', emoji: '📦' });
+    setPantryDraft({ name: '', quantity: '۱ عدد', expiry: '۷', emoji: 'box' });
     setModal(null);
   };
 
@@ -590,8 +605,8 @@ const App = () => {
 
   const addCategory = () => {
     if (!newCategoryDraft.label.trim()) return;
-    setCategories((current) => [...current, { id: makeId('cat'), label: newCategoryDraft.label.trim(), emoji: newCategoryDraft.emoji || '📦' }]);
-    setNewCategoryDraft({ label: '', emoji: '📦' });
+    setCategories((current) => [...current, { id: makeId('cat'), label: newCategoryDraft.label.trim(), emoji: newCategoryDraft.emoji || 'box' }]);
+    setNewCategoryDraft({ label: '', emoji: 'box' });
     setModal(null);
   };
 
@@ -652,7 +667,7 @@ const App = () => {
         name: setup.userName || 'شما',
         text,
         date: 'همین حالا',
-        emoji: '🙂',
+        emoji: 'user',
       }, ...(current.comments || [])],
     }));
     setCommentDraft('');
@@ -701,12 +716,12 @@ const App = () => {
       if (items.length) groups.push({ ...category, items });
     });
     const uncategorized = filteredItems.filter((item) => !categories.some((category) => category.id === item.category));
-    if (uncategorized.length) groups.push({ id: 'other', label: 'سایر', emoji: '📦', items: uncategorized });
+    if (uncategorized.length) groups.push({ id: 'other', label: 'سایر', emoji: 'box', items: uncategorized });
     return groups;
   }, [categories, filteredItems]);
 
   if (!hydrated) {
-    return <SafeAreaView style={styles.loading}><StatusBar barStyle="dark-content" /><Text style={styles.loadingLogo}>🛒</Text><Text style={styles.loadingText}>خریدیار در حال آماده‌سازی است…</Text></SafeAreaView>;
+    return <SafeAreaView style={styles.loading}><StatusBar barStyle="dark-content" /><Glyph value="cart-shopping" size={44} color={THEME.primary} style={styles.loadingLogo} /><Text style={styles.loadingText}>خریدیار در حال آماده‌سازی است…</Text></SafeAreaView>;
   }
 
   if (!setup.onboardingDone) {
@@ -714,11 +729,11 @@ const App = () => {
       <SafeAreaView style={styles.appShell}>
         <StatusBar barStyle="dark-content" />
         <ScrollView contentContainerStyle={styles.onboarding}>
-          <View style={styles.brandMark}><Text style={styles.brandMarkText}>🛒</Text></View>
+          <View style={styles.brandMark}><Icon name="cart" size={34} color="#fff" /></View>
           <Text style={styles.brandName}>خریدیار</Text>
           <Text style={styles.brandTagline}>خریدهای روزمره، ساده‌تر و هوشمندتر</Text>
           <View style={styles.onboardingCard}>
-            <Text style={styles.onboardingTitle}>خوش آمدی 👋</Text>
+            <Text style={styles.onboardingTitle}>خوش آمدی</Text>
             <Text style={styles.onboardingText}>برای شروع چند تنظیم کوچک را انتخاب کن.</Text>
             <Text style={styles.fieldLabel}>اسمت را چطور صدا بزنیم؟</Text>
             <TextInput
@@ -732,7 +747,7 @@ const App = () => {
             <Text style={styles.fieldLabel}>ورود (اختیاری)</Text>
             <View style={styles.authRow}>
               <Pressable onPress={() => setOnboardingAuth('phone')} style={[styles.authButton, onboardingAuth === 'phone' && styles.authButtonActive]}>
-                <Text style={styles.authEmoji}>📱</Text>
+                <Glyph value="mobile-screen" size={17} color={THEME.primary} style={styles.authEmoji} />
                 <Text style={[styles.authButtonText, onboardingAuth === 'phone' && styles.authButtonTextActive]}>شماره موبایل</Text>
               </Pressable>
               <Pressable onPress={() => setOnboardingAuth('google')} style={[styles.authButton, onboardingAuth === 'google' && styles.authButtonActive]}>
@@ -740,7 +755,7 @@ const App = () => {
                 <Text style={[styles.authButtonText, onboardingAuth === 'google' && styles.authButtonTextActive]}>حساب Google</Text>
               </Pressable>
               <Pressable onPress={() => setOnboardingAuth('skip')} style={[styles.authButton, onboardingAuth === 'skip' && styles.authButtonActive]}>
-                <Text style={styles.authEmoji}>→</Text>
+                <Icon name="arrow" size={16} color={THEME.primary} />
                 <Text style={[styles.authButtonText, onboardingAuth === 'skip' && styles.authButtonTextActive]}>رد کردن</Text>
               </Pressable>
             </View>
@@ -767,7 +782,7 @@ const App = () => {
                 if (inviteDraft.trim()) {
                   setFamily((current) => ({
                     ...current,
-                    members: [...(current.members || []), { id: makeId('member'), name: inviteDraft.trim(), role: 'دعوت‌شده', points: 0, emoji: '✉️' }],
+                    members: [...(current.members || []), { id: makeId('member'), name: inviteDraft.trim(), role: 'دعوت‌شده', points: 0, emoji: 'envelope' }],
                   }));
                   setInviteMessage('دعوت ثبت شد؛ بعد از ورود عضو برای او ارسال می‌شود.');
                   setInviteDraft('');
@@ -778,7 +793,7 @@ const App = () => {
             <Button onPress={saveOnboarding} icon="arrow" style={styles.continueButton}>شروع کنیم</Button>
             <Pressable onPress={saveOnboarding} style={styles.skipButton}><Text style={styles.skipText}>فعلاً رد می‌کنم</Text></Pressable>
           </View>
-          <Text style={styles.onboardingFoot}>ساخته‌شده با ♥ توسط NziCode</Text>
+          <Text style={styles.onboardingFoot}>ساخته‌شده با ❤ توسط NziCode</Text>
         </ScrollView>
       </SafeAreaView>
     );
@@ -859,7 +874,7 @@ const App = () => {
       <Text style={styles.fieldLabel}>نام لیست</Text>
       <TextInput value={newListDraft.name} onChangeText={(name) => setNewListDraft((current) => ({ ...current, name }))} placeholder="مثلاً خرید ماهانه" placeholderTextColor={THEME.faint} style={styles.input} textAlign="right" autoFocus />
       <Text style={styles.fieldLabel}>آیکون لیست</Text>
-      <View style={styles.emojiGrid}>{['🏠', '🛒', '🎉', '🔧', '🏢', '🧺', '🎒', '🍽️'].map((emoji) => <Pressable key={emoji} onPress={() => setNewListDraft((current) => ({ ...current, emoji }))} style={[styles.emojiChoice, newListDraft.emoji === emoji && styles.emojiChoiceActive]}><Text style={styles.emojiChoiceText}>{emoji}</Text></Pressable>)}</View>
+      <View style={styles.emojiGrid}>{['house', 'cart-shopping', 'champagne-glasses', 'wrench', 'building', 'basket-shopping', 'shopping-bag', 'utensils'].map((emoji) => <Pressable key={emoji} onPress={() => setNewListDraft((current) => ({ ...current, emoji }))} style={[styles.emojiChoice, newListDraft.emoji === emoji && styles.emojiChoiceActive]}><Glyph value={emoji} size={20} color={newListDraft.emoji === emoji ? THEME.primary : THEME.muted} /></Pressable>)}</View>
       <Button onPress={createList} icon="plus" style={styles.modalPrimaryButton}>ساخت لیست</Button>
     </ModalShell>
   );
@@ -868,7 +883,7 @@ const App = () => {
     <ModalShell visible={modal === 'newCategory'} onClose={() => setModal(null)} title="دسته‌بندی جدید">
       <TextInput value={newCategoryDraft.label} onChangeText={(label) => setNewCategoryDraft((current) => ({ ...current, label }))} placeholder="مثلاً لوازم کودک" placeholderTextColor={THEME.faint} style={styles.input} textAlign="right" autoFocus />
       <Text style={styles.fieldLabel}>انتخاب ایموجی</Text>
-      <View style={styles.emojiGrid}>{['🧸', '🧴', '🐾', '📚', '🌿', '🎁', '🧰', '📦'].map((emoji) => <Pressable key={emoji} onPress={() => setNewCategoryDraft((current) => ({ ...current, emoji }))} style={[styles.emojiChoice, newCategoryDraft.emoji === emoji && styles.emojiChoiceActive]}><Text style={styles.emojiChoiceText}>{emoji}</Text></Pressable>)}</View>
+      <View style={styles.emojiGrid}>{['bone', 'pump-soap', 'paw', 'book', 'leaf', 'gift', 'toolbox', 'box'].map((emoji) => <Pressable key={emoji} onPress={() => setNewCategoryDraft((current) => ({ ...current, emoji }))} style={[styles.emojiChoice, newCategoryDraft.emoji === emoji && styles.emojiChoiceActive]}><Glyph value={emoji} size={20} color={newCategoryDraft.emoji === emoji ? THEME.primary : THEME.muted} /></Pressable>)}</View>
       <Button onPress={addCategory} icon="plus" style={styles.modalPrimaryButton}>افزودن دسته‌بندی</Button>
     </ModalShell>
   );
@@ -890,7 +905,7 @@ const App = () => {
       <ScrollView style={styles.managerList}>
         {categories.map((category) => (
           <View key={category.id} style={styles.managerRow}>
-            <Text style={styles.managerEmoji}>{category.emoji}</Text>
+            <Glyph value={category.emoji} size={19} color={THEME.primary} style={styles.managerEmoji} />
             <Text style={styles.managerName}>{category.label}</Text>
             <Pressable onPress={() => removeCategory(category.id)} style={styles.iconButton}><Icon name="trash" size={20} color={THEME.danger} /></Pressable>
           </View>
@@ -907,16 +922,16 @@ const App = () => {
           <View style={styles.historyMain}><Text style={styles.historyName}>{record.listName}</Text><Text style={styles.historyMeta}>{record.date} · {record.count} قلم</Text></View>
           <Text style={styles.historyTotal}>{formatMoney(record.total, setup.currency)}</Text>
         </View>
-      )) : <EmptyState icon="🗂️" title="هنوز سابقه‌ای نیست" text="وقتی خریدی را تمام کنی، اینجا ذخیره می‌شود." />}
+      )) : <EmptyState icon="box-archive" title="هنوز سابقه‌ای نیست" text="وقتی خریدی را تمام کنی، اینجا ذخیره می‌شود." />}
     </ModalShell>
   );
 
   const renderContactModal = () => (
     <ModalShell visible={modal === 'contact'} onClose={() => setModal(null)} title="ارتباط با NziCode">
       <View style={styles.contactBrand}><View style={styles.brandMini}><Text style={styles.brandMiniText}>N</Text></View><View><Text style={styles.contactName}>NziCode</Text><Text style={styles.contactSub}>توسعه‌دهنده‌ی خریدیار</Text></View></View>
-      <Pressable onPress={() => openContact('whatsapp')} style={styles.contactRow}><Text style={styles.contactEmoji}>💬</Text><View style={styles.contactMain}><Text style={styles.contactLabel}>واتساپ</Text><Text style={styles.contactValue}>0919 843 3408</Text></View><Icon name="chevron" color={THEME.primary} /></Pressable>
-      <Pressable onPress={() => openContact('telegram')} style={styles.contactRow}><Text style={styles.contactEmoji}>✈️</Text><View style={styles.contactMain}><Text style={styles.contactLabel}>تلگرام</Text><Text style={styles.contactValue}>@NziCode</Text></View><Icon name="chevron" color={THEME.primary} /></Pressable>
-      <Pressable onPress={() => openContact('email')} style={styles.contactRow}><Text style={styles.contactEmoji}>✉️</Text><View style={styles.contactMain}><Text style={styles.contactLabel}>ایمیل</Text><Text style={styles.contactValue}>nazari.moradkhani@gmail.com</Text></View><Icon name="chevron" color={THEME.primary} /></Pressable>
+      <Pressable onPress={() => openContact('whatsapp')} style={styles.contactRow}><Glyph value="whatsapp" size={19} color={THEME.primary} style={styles.contactEmoji} /><View style={styles.contactMain}><Text style={styles.contactLabel}>واتساپ</Text><Text style={styles.contactValue}>0919 843 3408</Text></View><Icon name="chevron" color={THEME.primary} /></Pressable>
+      <Pressable onPress={() => openContact('telegram')} style={styles.contactRow}><Glyph value="telegram" size={19} color={THEME.primary} style={styles.contactEmoji} /><View style={styles.contactMain}><Text style={styles.contactLabel}>تلگرام</Text><Text style={styles.contactValue}>@NziCode</Text></View><Icon name="chevron" color={THEME.primary} /></Pressable>
+      <Pressable onPress={() => openContact('email')} style={styles.contactRow}><Glyph value="envelope" size={17} color={THEME.primary} style={styles.contactEmoji} /><View style={styles.contactMain}><Text style={styles.contactLabel}>ایمیل</Text><Text style={styles.contactValue}>nazari.moradkhani@gmail.com</Text></View><Icon name="chevron" color={THEME.primary} /></Pressable>
     </ModalShell>
   );
 
@@ -926,8 +941,8 @@ const App = () => {
       <>
         <View style={styles.homeTop}>
           <Pressable onPress={() => setMenuOpen(true)} style={styles.iconButton}><Icon name="menu" size={25} color={THEME.ink} /></Pressable>
-          <View style={styles.greeting}><Text style={styles.greetingText}>سلام {setup.userName || 'دوست خریدیار'} 👋</Text><Text style={styles.greetingSub}>امروز چه چیزی لازم داری؟</Text></View>
-          <View style={styles.avatar}><Text style={styles.avatarText}>🙂</Text></View>
+          <View style={styles.greeting}><Text style={styles.greetingText}>سلام {setup.userName || 'دوست خریدیار'}</Text><Text style={styles.greetingSub}>امروز چه چیزی لازم داری؟</Text></View>
+          <View style={styles.avatar}><Icon name="profile" size={19} color={THEME.primary} /></View>
         </View>
         <View style={styles.statsRow}>
           <View style={styles.statCard}><Text style={styles.statNumber}>{lists.length}</Text><Text style={styles.statLabel}>لیست فعال</Text></View>
@@ -935,7 +950,7 @@ const App = () => {
           <View style={styles.statCard}><Text style={styles.statNumber}>{pantry.length}</Text><Text style={styles.statLabel}>در انبار</Text></View>
         </View>
         <View style={styles.smartCard}>
-          <View style={styles.smartHeader}><View style={styles.smartIcon}><Icon name="spark" size={24} color="#fff" /></View><View style={styles.smartHeaderText}><Text style={styles.smartEyebrow}>پیشنهاد هوشمند</Text><Text style={styles.smartTitle}>{SMART_SUGGESTIONS[0].title}</Text></View><Text style={styles.smartEmoji}>{SMART_SUGGESTIONS[0].icon}</Text></View>
+          <View style={styles.smartHeader}><View style={styles.smartIcon}><Icon name="spark" size={24} color="#fff" /></View><View style={styles.smartHeaderText}><Text style={styles.smartEyebrow}>پیشنهاد هوشمند</Text><Text style={styles.smartTitle}>{SMART_SUGGESTIONS[0].title}</Text></View><Glyph value={SMART_SUGGESTIONS[0].icon} size={24} color={THEME.warning} style={styles.smartEmoji} /></View>
           <Text style={styles.smartText}>{SMART_SUGGESTIONS[0].text}</Text>
           <Pressable onPress={() => { setActiveListId(activeList?.id || lists[0]?.id); setModal('addItem'); setItemDraft((current) => ({ ...current, name: SMART_SUGGESTIONS[0].items[0] })); }} style={styles.smartAction}><Text style={styles.smartActionText}>افزودن پیشنهاد</Text><Icon name="arrow" size={19} color="#fff" /></Pressable>
         </View>
@@ -945,15 +960,15 @@ const App = () => {
             const done = list.items.filter((item) => item.done).length;
             const percent = list.items.length ? Math.round((done / list.items.length) * 100) : 0;
             return <Pressable key={list.id} onPress={() => { setActiveListId(list.id); setView('detail'); }} style={styles.listCard}>
-              <View style={styles.listCardTop}><Text style={styles.listEmoji}>{list.emoji}</Text><Icon name="chevron" size={19} color={THEME.faint} /></View>
+              <View style={styles.listCardTop}><Glyph value={list.emoji} size={25} color={THEME.primary} style={styles.listEmoji} /><Icon name="chevron" size={19} color={THEME.faint} /></View>
               <Text style={styles.listName} numberOfLines={1}>{list.name}</Text>
               <Text style={styles.listMeta}>{list.items.length ? `${done} از ${list.items.length} انجام شد` : 'لیست خالی و آماده‌ی شروع'}</Text>
               <ProgressBar value={percent} />
-              <View style={styles.listCardBottom}><Text style={styles.listPercent}>{percent}%</Text><Text style={styles.memberCount}>♧ {list.members}</Text></View>
+              <View style={styles.listCardBottom}><Text style={styles.listPercent}>{percent}%</Text><View style={styles.memberCountRow}><Icon name="users" size={12} color={THEME.faint} /><Text style={styles.memberCount}>{list.members}</Text></View></View>
             </Pressable>;
           })}
           <Pressable onPress={() => setModal('newList')} style={[styles.listCard, styles.newListCard]}><View style={styles.newListCircle}><Icon name="plus" size={25} color={THEME.primary} /></View><Text style={styles.newListText}>لیست جدید</Text><Text style={styles.listMeta}>خانه، شرکت، مهمانی…</Text></Pressable>
-        </ScrollView> : <EmptyState icon="🗒️" title="اولین لیستت را بساز" action="ساخت لیست" onAction={() => setModal('newList')} />}
+        </ScrollView> : <EmptyState icon="clipboard-list" title="اولین لیستت را بساز" action="ساخت لیست" onAction={() => setModal('newList')} />}
         <SectionTitle title="دسترسی سریع" />
         <View style={styles.quickGrid}>
           <Pressable onPress={() => navigate('scanner')} style={styles.quickCard}><View style={[styles.quickIcon, { backgroundColor: '#E8F8F2' }]}><Icon name="scan" size={25} color={THEME.success} /></View><Text style={styles.quickTitle}>اسکن یخچال</Text><Text style={styles.quickSub}>تشخیص موجودی</Text></Pressable>
@@ -961,7 +976,7 @@ const App = () => {
           <Pressable onPress={() => navigate('pantry')} style={styles.quickCard}><View style={[styles.quickIcon, { backgroundColor: '#FFF5D9' }]}><Icon name="pantry" size={25} color={THEME.warning} /></View><Text style={styles.quickTitle}>انبار خانه</Text><Text style={styles.quickSub}>تاریخ انقضا</Text></Pressable>
           <Pressable onPress={() => navigate('receipts')} style={styles.quickCard}><View style={[styles.quickIcon, { backgroundColor: '#ECEAFF' }]}><Icon name="receipt" size={25} color={THEME.primary} /></View><Text style={styles.quickTitle}>رسید و هزینه</Text><Text style={styles.quickSub}>گزارش ماهانه</Text></Pressable>
         </View>
-        <View style={styles.tipCard}><Text style={styles.tipEmoji}>✨</Text><View style={styles.tipMain}><Text style={styles.tipTitle}>یک نکته‌ی کوچک</Text><Text style={styles.tipText}>اقلامی که همیشه تکرار می‌کنی را به انبار اضافه کن تا قبل از تمام‌شدن یادت بیندازد.</Text></View></View>
+        <View style={styles.tipCard}><Glyph value="lightbulb" size={22} color={THEME.warning} style={styles.tipEmoji} /><View style={styles.tipMain}><Text style={styles.tipTitle}>یک نکته‌ی کوچک</Text><Text style={styles.tipText}>اقلامی که همیشه تکرار می‌کنی را به انبار اضافه کن تا قبل از تمام‌شدن یادت بیندازد.</Text></View></View>
       </>
     );
   };
@@ -974,9 +989,9 @@ const App = () => {
         const done = list.items.filter((item) => item.done).length;
         const percent = list.items.length ? Math.round((done / list.items.length) * 100) : 0;
         return <Pressable key={list.id} onPress={() => { setActiveListId(list.id); setView('detail'); }} style={styles.fullListCard}>
-          <Text style={styles.fullListEmoji}>{list.emoji}</Text><View style={styles.fullListMain}><View style={styles.fullListTitleRow}><Text style={styles.fullListName}>{list.name}</Text><Icon name="chevron" color={THEME.faint} /></View><Text style={styles.fullListMeta}>{list.items.length ? `${list.items.length} قلم · ${done} انجام‌شده` : 'برای افزودن کالا آماده است'}</Text><ProgressBar value={percent} /></View><Text style={styles.fullListPercent}>{percent}%</Text>
+          <Glyph value={list.emoji} size={22} color={THEME.primary} style={styles.fullListEmoji} /><View style={styles.fullListMain}><View style={styles.fullListTitleRow}><Text style={styles.fullListName}>{list.name}</Text><Icon name="chevron" color={THEME.faint} /></View><Text style={styles.fullListMeta}>{list.items.length ? `${list.items.length} قلم · ${done} انجام‌شده` : 'برای افزودن کالا آماده است'}</Text><ProgressBar value={percent} /></View><Text style={styles.fullListPercent}>{percent}%</Text>
         </Pressable>;
-      }) : <EmptyState icon="🗒️" title="لیستی نداری" text="برای خانه، شرکت یا مهمانی یک لیست بساز." action="ساخت لیست" onAction={() => setModal('newList')} />}
+      }) : <EmptyState icon="clipboard-list" title="لیستی نداری" text="برای خانه، شرکت یا مهمانی یک لیست بساز." action="ساخت لیست" onAction={() => setModal('newList')} />}
       <View style={styles.historyCallout}><View style={styles.historyCalloutIcon}><Icon name="clock" color={THEME.primary} /></View><View style={styles.historyCalloutMain}><Text style={styles.historyCalloutTitle}>لیست‌های قبلی</Text><Text style={styles.historyCalloutText}>{history.length ? `${history.length} خرید ذخیره شده` : 'هنوز خریدی ثبت نشده است'}</Text></View><Pressable onPress={() => setModal('history')}><Text style={styles.linkText}>مشاهده</Text></Pressable></View>
     </>
   );
@@ -987,15 +1002,15 @@ const App = () => {
       <View style={styles.detailActionRow}><Pressable onPress={() => setModal('addItem')} style={styles.addInput}><Icon name="plus" size={21} color={THEME.primary} /><Text style={styles.addInputText}>کالا یا یادداشت جدید اضافه کن…</Text></Pressable><Pressable onPress={() => { setShoppingIndex(0); setView('shopping'); }} style={styles.shoppingButton}><Icon name="cart" size={19} color="#fff" /><Text style={styles.shoppingButtonText}>خرید</Text></Pressable></View>
       <View style={styles.searchBox}><Icon name="search" size={21} color={THEME.primary} /><TextInput value={search} onChangeText={setSearch} placeholder="جست‌وجوی کالا" placeholderTextColor={THEME.faint} style={styles.searchInput} textAlign="right" /></View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryScroll}>
-        <Pill active={filter === 'all'} onPress={() => setFilter('all')} emoji="✨">همه</Pill>
+        <Pill active={filter === 'all'} onPress={() => setFilter('all')} emoji="wand-magic-sparkles">همه</Pill>
         {categories.map((category) => <Pill key={category.id} active={filter === category.id} onPress={() => setFilter(category.id)} emoji={category.emoji}>{category.label}</Pill>)}
         <Pill onPress={() => setModal('categories')} emoji="＋">مدیریت</Pill>
       </ScrollView>
-      {!filteredItems.length ? <EmptyState icon="🛒" title="این لیست هنوز خالی است" text="با افزودن یک کالا شروع کن؛ خریدیار بقیه را مرتب می‌کند." action="افزودن کالا" onAction={() => setModal('addItem')} /> : groupedItems.map((group) => (
+      {!filteredItems.length ? <EmptyState icon="cart-shopping" title="این لیست هنوز خالی است" text="با افزودن یک کالا شروع کن؛ خریدیار بقیه را مرتب می‌کند." action="افزودن کالا" onAction={() => setModal('addItem')} /> : groupedItems.map((group) => (
         <View key={group.id} style={styles.itemGroup}>
-          <View style={styles.groupHeader}><Text style={styles.groupEmoji}>{group.emoji}</Text><Text style={styles.groupTitle}>{group.label}</Text><Text style={styles.groupCount}>{group.items.length}</Text></View>
+          <View style={styles.groupHeader}><Glyph value={group.emoji} size={16} color={THEME.primary} style={styles.groupEmoji} /><Text style={styles.groupTitle}>{group.label}</Text><Text style={styles.groupCount}>{group.items.length}</Text></View>
           {group.items.map((item) => <Pressable key={item.id} onPress={() => toggleItem(item.id)} onLongPress={() => removeItem(item.id)} style={[styles.itemRow, item.done && styles.itemRowDone]}>
-            <View style={[styles.checkCircle, item.done && styles.checkCircleDone]}>{item.done ? <Icon name="check" size={16} color="#fff" /> : null}</View><Text style={styles.itemEmoji}>{item.emoji}</Text><View style={styles.itemMain}><Text style={[styles.itemName, item.done && styles.itemNameDone]}>{item.name}</Text><Text style={styles.itemMeta}>{item.quantity} · {item.price ? formatMoney(item.price, setup.currency) : 'قیمت ثبت نشده'}</Text></View><Icon name="chevron" size={18} color={THEME.faint} />
+            <View style={[styles.checkCircle, item.done && styles.checkCircleDone]}>{item.done ? <Icon name="check" size={16} color="#fff" /> : null}</View><Glyph value={item.emoji} size={19} color={THEME.muted} style={styles.itemEmoji} /><View style={styles.itemMain}><Text style={[styles.itemName, item.done && styles.itemNameDone]}>{item.name}</Text><Text style={styles.itemMeta}>{item.quantity} · {item.price ? formatMoney(item.price, setup.currency) : 'قیمت ثبت نشده'}</Text></View><Icon name="chevron" size={18} color={THEME.faint} />
           </Pressable>)}
         </View>
       ))}
@@ -1009,7 +1024,7 @@ const App = () => {
       <ScreenHeader title="اسکن یخچال و کابینت" subtitle="موجودی را با یک عکس مرتب کن" />
       <View style={styles.scannerHero}><View style={styles.scannerFrame}><Icon name="camera" size={48} color="#fff" /><Text style={styles.scannerFrameText}>{scannerCaptured ? 'تصویر تحلیل شد' : 'دوربین را به سمت یخچال بگیر'}</Text></View><Button onPress={captureScanner} icon="camera">{scannerCaptured ? 'اسکن دوباره' : 'گرفتن عکس'}</Button><Text style={styles.demoNote}>نسخه‌ی نمایشی؛ اتصال دوربین واقعی در build اندروید قابل افزودن است.</Text></View>
       <SectionTitle title="اقلام تشخیص‌داده‌شده" action={scannerItems.length ? 'افزودن همه' : null} onAction={() => scannerItems.forEach(addScannerItem)} />
-      {scannerItems.length ? scannerItems.map((item) => <View key={item.id} style={styles.scanResultRow}><Text style={styles.scanResultEmoji}>{item.emoji}</Text><View style={styles.scanResultMain}><Text style={styles.scanResultName}>{item.name}</Text><Text style={styles.scanResultMeta}>{getCategory(categories, item.category).label} · اطمینان {item.confidence}%</Text><ProgressBar value={item.confidence} color={THEME.success} /></View><Pressable onPress={() => addScannerItem(item)} style={styles.addSmall}><Icon name="plus" size={18} color={THEME.primary} /></Pressable></View>) : <EmptyState icon="📷" title="هنوز تصویری اسکن نشده" text="از یخچال یا کابینت عکس بگیر تا اقلام پیشنهادی را ببینی." />}
+      {scannerItems.length ? scannerItems.map((item) => <View key={item.id} style={styles.scanResultRow}><Glyph value={item.emoji} size={23} color={THEME.primary} style={styles.scanResultEmoji} /><View style={styles.scanResultMain}><Text style={styles.scanResultName}>{item.name}</Text><Text style={styles.scanResultMeta}>{getCategory(categories, item.category).label} · اطمینان {item.confidence}%</Text><ProgressBar value={item.confidence} color={THEME.success} /></View><Pressable onPress={() => addScannerItem(item)} style={styles.addSmall}><Icon name="plus" size={18} color={THEME.primary} /></Pressable></View>) : <EmptyState icon="camera" title="هنوز تصویری اسکن نشده" text="از یخچال یا کابینت عکس بگیر تا اقلام پیشنهادی را ببینی." />}
       <View style={styles.scanTips}><Text style={styles.scanTipsTitle}>برای نتیجه‌ی بهتر</Text><Text style={styles.scanTip}>• نور محیط کافی باشد و درِ قفسه‌ها باز باشد.</Text><Text style={styles.scanTip}>• هر بار یک بخش از یخچال را اسکن کن.</Text></View>
     </>
   );
@@ -1020,8 +1035,8 @@ const App = () => {
     return (
       <View style={styles.shoppingWrap}>
         <ScreenHeader title="حالت خرید" subtitle={activeList?.name || 'لیست خرید'} onBack={() => setView('detail')} dark right={<Text style={styles.shoppingCounter}>{doneCount}/{activeItems.length}</Text>} />
-        <View style={styles.routeCard}><View style={styles.routeHeader}><Icon name="route" size={23} color={THEME.primary} /><Text style={styles.routeTitle}>مسیر پیشنهادی فروشگاه</Text><Text style={styles.routeAisle}>راهرو {current?.aisle || '—'}</Text></View><View style={styles.routeMap}><View style={styles.routeLine} /><View style={styles.routeDot}><Text>🛒</Text></View>{['لبنیات', 'میوه', 'خواربار', 'صندوق'].map((label, index) => <View key={label} style={[styles.routeStop, { top: 22 + index * 36 }]}><View style={[styles.stopDot, index === 0 && styles.stopDotActive]} /><Text style={styles.stopLabel}>{label}</Text></View>)}</View></View>
-        {current ? <View style={styles.currentItemCard}><Text style={styles.currentEyebrow}>کالای بعدی</Text><Text style={styles.currentEmoji}>{current.emoji}</Text><Text style={styles.currentName}>{current.name}</Text><Text style={styles.currentQuantity}>{current.quantity} · {current.price ? formatMoney(current.price, setup.currency) : 'قیمت تقریبی ثبت نشده'}</Text><View style={styles.swipeHint}><Text style={styles.swipeHintText}>برای انجام‌شدن، دکمه‌ی تیک را بزن</Text></View><View style={styles.shoppingControls}><Pressable onPress={() => setShoppingIndex((index) => Math.min(index + 1, Math.max(openItems.length - 1, 0)))} style={styles.skipButtonLarge}><Text style={styles.skipButtonText}>بعداً</Text></Pressable><Pressable onPress={() => { toggleItem(current.id); setShoppingIndex((index) => Math.min(index, Math.max(openItems.length - 2, 0))); }} style={styles.doneButtonLarge}><Icon name="check" size={28} color="#fff" /><Text style={styles.doneButtonText}>برداشتم</Text></Pressable></View></View> : <EmptyState icon="🎉" title="خریدت تمام شد!" text="همه‌ی اقلام این لیست را برداشتی." action="ذخیره و بازگشت" onAction={archiveActiveList} />}
+        <View style={styles.routeCard}><View style={styles.routeHeader}><Icon name="route" size={23} color={THEME.primary} /><Text style={styles.routeTitle}>مسیر پیشنهادی فروشگاه</Text><Text style={styles.routeAisle}>راهرو {current?.aisle || '—'}</Text></View><View style={styles.routeMap}><View style={styles.routeLine} /><View style={styles.routeDot}><Icon name="cart" size={16} color={THEME.primary} /></View>{['لبنیات', 'میوه', 'خواربار', 'صندوق'].map((label, index) => <View key={label} style={[styles.routeStop, { top: 22 + index * 36 }]}><View style={[styles.stopDot, index === 0 && styles.stopDotActive]} /><Text style={styles.stopLabel}>{label}</Text></View>)}</View></View>
+        {current ? <View style={styles.currentItemCard}><Text style={styles.currentEyebrow}>کالای بعدی</Text><Glyph value={current.emoji} size={56} color={THEME.primary} style={styles.currentEmoji} /><Text style={styles.currentName}>{current.name}</Text><Text style={styles.currentQuantity}>{current.quantity} · {current.price ? formatMoney(current.price, setup.currency) : 'قیمت تقریبی ثبت نشده'}</Text><View style={styles.swipeHint}><Text style={styles.swipeHintText}>برای انجام‌شدن، دکمه‌ی تیک را بزن</Text></View><View style={styles.shoppingControls}><Pressable onPress={() => setShoppingIndex((index) => Math.min(index + 1, Math.max(openItems.length - 1, 0)))} style={styles.skipButtonLarge}><Text style={styles.skipButtonText}>بعداً</Text></Pressable><Pressable onPress={() => { toggleItem(current.id); setShoppingIndex((index) => Math.min(index, Math.max(openItems.length - 2, 0))); }} style={styles.doneButtonLarge}><Icon name="check" size={28} color="#fff" /><Text style={styles.doneButtonText}>برداشتم</Text></Pressable></View></View> : <EmptyState icon="champagne-glasses" title="خریدت تمام شد!" text="همه‌ی اقلام این لیست را برداشتی." action="ذخیره و بازگشت" onAction={archiveActiveList} />}
         <View style={styles.shoppingBottom}><View><Text style={styles.shoppingBottomLabel}>جمع لحظه‌ای</Text><Text style={styles.shoppingBottomValue}>{formatMoney(completedTotal, setup.currency)}</Text></View><ProgressBar value={activeItems.length ? (doneCount / activeItems.length) * 100 : 0} color={THEME.success} /></View>
       </View>
     );
@@ -1033,9 +1048,9 @@ const App = () => {
       <View style={styles.pantrySummary}><View><Text style={styles.pantrySummaryLabel}>اقلام موجود</Text><Text style={styles.pantrySummaryNumber}>{pantry.length}</Text></View><View style={styles.pantryLegend}><Text style={styles.legendItem}><Text style={{ color: THEME.danger }}>●</Text> فوری</Text><Text style={styles.legendItem}><Text style={{ color: THEME.warning }}>●</Text> نزدیک</Text><Text style={styles.legendItem}><Text style={{ color: THEME.success }}>●</Text> مناسب</Text></View></View>
       {pantry.length ? pantry.map((item) => {
         const tone = item.expiry <= 1 ? 'danger' : item.expiry <= 3 ? 'warning' : 'success';
-        return <View key={item.id} style={[styles.pantryRow, tone === 'danger' ? styles.pantryDanger : tone === 'warning' ? styles.pantryWarning : styles.pantrySuccess]}><Text style={styles.pantryEmoji}>{item.emoji}</Text><View style={styles.pantryMain}><Text style={styles.pantryName}>{item.name}</Text><Text style={styles.pantryMeta}>{item.quantity} · {item.expiry <= 0 ? 'منقضی شده' : `${item.expiry} روز تا انقضا`}</Text></View><Button onPress={() => addPantryToList(item)} variant="ghost" icon="plus">لیست خرید</Button></View>;
-      }) : <EmptyState icon="🧺" title="انبارت خالی است" text="موجودی خانه را ثبت کن تا تاریخ انقضا را از دست ندهی." action="افزودن موجودی" onAction={() => setModal('newPantry')} />}
-      <View style={styles.pantryTip}><Text style={styles.pantryTipEmoji}>⏰</Text><Text style={styles.pantryTipText}>اقلامی که کمتر از سه روز تا انقضا دارند، بالای صفحه هشدار می‌گیرند.</Text></View>
+        return <View key={item.id} style={[styles.pantryRow, tone === 'danger' ? styles.pantryDanger : tone === 'warning' ? styles.pantryWarning : styles.pantrySuccess]}><Glyph value={item.emoji} size={23} color={THEME.primary} style={styles.pantryEmoji} /><View style={styles.pantryMain}><Text style={styles.pantryName}>{item.name}</Text><Text style={styles.pantryMeta}>{item.quantity} · {item.expiry <= 0 ? 'منقضی شده' : `${item.expiry} روز تا انقضا`}</Text></View><Button onPress={() => addPantryToList(item)} variant="ghost" icon="plus">لیست خرید</Button></View>;
+      }) : <EmptyState icon="box-archive" title="انبارت خالی است" text="موجودی خانه را ثبت کن تا تاریخ انقضا را از دست ندهی." action="افزودن موجودی" onAction={() => setModal('newPantry')} />}
+      <View style={styles.pantryTip}><Glyph value="clock" size={19} color={THEME.warning} style={styles.pantryTipEmoji} /><Text style={styles.pantryTipText}>اقلامی که کمتر از سه روز تا انقضا دارند، بالای صفحه هشدار می‌گیرند.</Text></View>
     </>
   );
 
@@ -1048,7 +1063,7 @@ const App = () => {
         <View style={styles.receiptScanCard}><View style={styles.receiptScanIcon}><Icon name="receipt" size={32} color="#fff" /></View><View style={styles.receiptScanMain}><Text style={styles.receiptScanTitle}>رسید جدید داری؟</Text><Text style={styles.receiptScanText}>با OCR مبلغ و اقلام را خودکار ثبت کن.</Text></View><Button onPress={scanReceipt} icon="camera" disabled={receiptScanning}>{receiptScanning ? 'در حال خواندن…' : 'اسکن رسید'}</Button></View>
         <View style={styles.monthCard}><SectionTitle title="هزینه‌ی این ماه" action="مقایسه با ماه قبل" /><View style={styles.monthTotalRow}><Text style={styles.monthTotal}>{formatMoney(receipts.length ? 485000 : 0, setup.currency)}</Text><View style={styles.changeBadge}><Text style={styles.changeText}>{receipts.length ? '+۸٪' : '—'}</Text></View></View><View style={styles.chart}>{chart.map((value, index) => <View key={index} style={styles.chartCol}><View style={[styles.chartBar, { height: `${(value / max) * 100}%`, backgroundColor: index === chart.length - 1 ? THEME.primary : '#D9D8F7' }]} /><Text style={styles.chartLabel}>{['فروردین', 'اردیبهشت', 'خرداد', 'تیر'][index]}</Text></View>)}</View></View>
         <SectionTitle title="رسیدهای اخیر" />
-        {receipts.length ? receipts.map((receipt) => <View key={receipt.id} style={styles.receiptRow}><View style={styles.receiptIcon}><Icon name="receipt" color={THEME.primary} /></View><View style={styles.receiptMain}><Text style={styles.receiptStore}>{receipt.store}</Text><Text style={styles.receiptMeta}>{receipt.date} · {receipt.count} قلم</Text></View><Text style={styles.receiptTotal}>{formatMoney(receipt.total, setup.currency)}</Text></View>) : <EmptyState icon="🧾" title="رسیدی ثبت نشده" text="یک رسید نمونه اسکن کن تا گزارش هزینه ساخته شود." />}
+        {receipts.length ? receipts.map((receipt) => <View key={receipt.id} style={styles.receiptRow}><View style={styles.receiptIcon}><Icon name="receipt" color={THEME.primary} /></View><View style={styles.receiptMain}><Text style={styles.receiptStore}>{receipt.store}</Text><Text style={styles.receiptMeta}>{receipt.date} · {receipt.count} قلم</Text></View><Text style={styles.receiptTotal}>{formatMoney(receipt.total, setup.currency)}</Text></View>) : <EmptyState icon="receipt" title="رسیدی ثبت نشده" text="یک رسید نمونه اسکن کن تا گزارش هزینه ساخته شود." />}
       </>
     );
   };
@@ -1056,11 +1071,11 @@ const App = () => {
   const renderFamily = () => (
     <>
       <ScreenHeader title="خانواده و امتیازها" subtitle="با هم خرید بهتری داشته باشید" />
-      <View style={styles.familyHero}><Text style={styles.familyHeroEmoji}>🏆</Text><View><Text style={styles.familyHeroTitle}>تیم خریدیار</Text><Text style={styles.familyHeroText}>با تکمیل لیست‌ها امتیاز بگیر و نشان جمع کن.</Text></View><Button onPress={shareActiveList} variant="secondary" icon="share">دعوت</Button></View>
-      <SectionTitle title="صرفه‌جویی این ماه" /><View style={styles.leaderboard}>{[{ name: setup.userName || 'شما', points: 420, emoji: '🙂' }, { name: 'سارا', points: 360, emoji: '👩🏻' }, { name: 'امیر', points: 280, emoji: '👨🏻' }].map((member, index) => <View key={member.name} style={styles.leaderRow}><Text style={styles.leaderRank}>{index + 1}</Text><Text style={styles.leaderEmoji}>{member.emoji}</Text><Text style={styles.leaderName}>{member.name}</Text><Text style={styles.leaderPoints}>{member.points} امتیاز</Text></View>)}</View>
-      <SectionTitle title="نشان‌های تو" /><View style={styles.badgeRow}>{[['🧠', 'خریدار هوشمند'], ['🌱', 'سبز زندگی کن'], ['⚡', 'سریع و مرتب']].map(([emoji, label]) => <View key={label} style={styles.badgeCard}><Text style={styles.badgeEmoji}>{emoji}</Text><Text style={styles.badgeLabel}>{label}</Text></View>)}</View>
+      <View style={styles.familyHero}><Glyph value="trophy" size={26} color="#fff" style={styles.familyHeroEmoji} /><View><Text style={styles.familyHeroTitle}>تیم خریدیار</Text><Text style={styles.familyHeroText}>با تکمیل لیست‌ها امتیاز بگیر و نشان جمع کن.</Text></View><Button onPress={shareActiveList} variant="secondary" icon="share">دعوت</Button></View>
+      <SectionTitle title="صرفه‌جویی این ماه" /><View style={styles.leaderboard}>{[{ name: setup.userName || 'شما', points: 420, emoji: 'user' }, { name: 'سارا', points: 360, emoji: 'user' }, { name: 'امیر', points: 280, emoji: 'user' }].map((member, index) => <View key={member.name} style={styles.leaderRow}><Text style={styles.leaderRank}>{index + 1}</Text><Glyph value={member.emoji} size={19} color={THEME.primary} style={styles.leaderEmoji} /><Text style={styles.leaderName}>{member.name}</Text><Text style={styles.leaderPoints}>{member.points} امتیاز</Text></View>)}</View>
+      <SectionTitle title="نشان‌های تو" /><View style={styles.badgeRow}>{[['brain', 'خریدار هوشمند'], ['leaf', 'سبز زندگی کن'], ['bolt', 'سریع و مرتب']].map(([emoji, label]) => <View key={label} style={styles.badgeCard}><Glyph value={emoji} size={23} color={THEME.primary} style={styles.badgeEmoji} /><Text style={styles.badgeLabel}>{label}</Text></View>)}</View>
       <SectionTitle title="گفت‌وگوی لیست" />
-      {(family.comments || []).length ? (family.comments || []).map((comment) => <View key={comment.id} style={styles.commentCard}><Text style={styles.commentEmoji}>{comment.emoji || '💬'}</Text><View style={styles.commentMain}><Text style={styles.commentName}>{comment.name}</Text><Text style={styles.commentText}>{comment.text}</Text></View><Text style={styles.commentTime}>{comment.date}</Text></View>) : <View style={styles.commentCard}><Text style={styles.commentEmoji}>💬</Text><View style={styles.commentMain}><Text style={styles.commentName}>گفت‌وگوی خانوادگی</Text><Text style={styles.commentText}>اولین نظر را روی لیست ثبت کن.</Text></View></View>}
+      {(family.comments || []).length ? (family.comments || []).map((comment) => <View key={comment.id} style={styles.commentCard}><Glyph value={comment.emoji || 'comment'} size={19} color={THEME.primary} style={styles.commentEmoji} /><View style={styles.commentMain}><Text style={styles.commentName}>{comment.name}</Text><Text style={styles.commentText}>{comment.text}</Text></View><Text style={styles.commentTime}>{comment.date}</Text></View>) : <View style={styles.commentCard}><Glyph value="comment" size={19} color={THEME.primary} style={styles.commentEmoji} /><View style={styles.commentMain}><Text style={styles.commentName}>گفت‌وگوی خانوادگی</Text><Text style={styles.commentText}>اولین نظر را روی لیست ثبت کن.</Text></View></View>}
       <View style={styles.commentInput}><TextInput value={commentDraft} onChangeText={setCommentDraft} placeholder="کامنت روی لیست…" placeholderTextColor={THEME.faint} style={styles.commentTextInput} textAlign="right" /><Button onPress={addComment} variant="ghost" icon="arrow">ارسال</Button></View>
     </>
   );
@@ -1068,16 +1083,16 @@ const App = () => {
   const renderProfile = () => (
     <>
       <ScreenHeader title="پروفایل و تنظیمات" subtitle="کنترل خریدیار در دستان تو" />
-      <View style={styles.profileCard}><View style={styles.profileAvatar}><Text style={styles.profileAvatarText}>🙂</Text></View><View style={styles.profileMain}><Text style={styles.profileName}>{setup.userName || 'دوست خریدیار'}</Text><Text style={styles.profileMeta}>عضو خریدیار · NziCode</Text></View><Pressable onPress={() => { setOnboardingDraft((current) => ({ ...current, name: setup.userName })); setModal('editProfile'); }} style={styles.iconButton}><Icon name="edit" color={THEME.primary} /></Pressable></View>
+      <View style={styles.profileCard}><View style={styles.profileAvatar}><Icon name="profile" size={22} color={THEME.primary} /></View><View style={styles.profileMain}><Text style={styles.profileName}>{setup.userName || 'دوست خریدیار'}</Text><Text style={styles.profileMeta}>عضو خریدیار · NziCode</Text></View><Pressable onPress={() => { setOnboardingDraft((current) => ({ ...current, name: setup.userName })); setModal('editProfile'); }} style={styles.iconButton}><Icon name="edit" color={THEME.primary} /></Pressable></View>
       <SectionTitle title="ترجیحات" />
       <View style={styles.settingsCard}>
         <View style={styles.settingRow}><View style={styles.settingIcon}><Icon name="bell" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>اعلان‌ها</Text><Text style={styles.settingSub}>یادآوری انقضا و لیست‌های مشترک</Text></View><Pressable onPress={() => setSetup((current) => ({ ...current, notifications: !current.notifications }))} style={[styles.switch, setup.notifications && styles.switchOn]}><View style={[styles.switchKnob, setup.notifications && styles.switchKnobOn]} /></Pressable></View>
         <View style={styles.settingRow}><View style={styles.settingIcon}><Icon name="cloud" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>حالت آفلاین</Text><Text style={styles.settingSub}>اطلاعات روی همین دستگاه ذخیره می‌شود</Text></View><Pressable onPress={() => setSetup((current) => ({ ...current, offline: !current.offline }))} style={[styles.switch, setup.offline && styles.switchOn]}><View style={[styles.switchKnob, setup.offline && styles.switchKnobOn]} /></Pressable></View>
-        <View style={styles.settingRow}><View style={styles.settingIcon}><Text style={styles.settingIconText}>💰</Text></View><View style={styles.settingMain}><Text style={styles.settingTitle}>واحد پول</Text><Text style={styles.settingSub}>{setup.currency}</Text></View><Pressable onPress={() => setModal('currency')}><Icon name="chevron" color={THEME.faint} /></Pressable></View>
-        <View style={styles.settingRow}><View style={styles.settingIcon}><Text style={styles.settingIconText}>🥗</Text></View><View style={styles.settingMain}><Text style={styles.settingTitle}>حالت غذایی</Text><Text style={styles.settingSub}>{setup.diet}</Text></View><Pressable onPress={() => setModal('diet')}><Icon name="chevron" color={THEME.faint} /></Pressable></View>
+        <View style={styles.settingRow}><View style={styles.settingIcon}><Glyph value="money-bill" size={16} color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>واحد پول</Text><Text style={styles.settingSub}>{setup.currency}</Text></View><Pressable onPress={() => setModal('currency')}><Icon name="chevron" color={THEME.faint} /></Pressable></View>
+        <View style={styles.settingRow}><View style={styles.settingIcon}><Glyph value="bowl-food" size={16} color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>حالت غذایی</Text><Text style={styles.settingSub}>{setup.diet}</Text></View><Pressable onPress={() => setModal('diet')}><Icon name="chevron" color={THEME.faint} /></Pressable></View>
       </View>
       <SectionTitle title="ابزارها" />
-      <View style={styles.settingsCard}><Pressable onPress={() => navigate('family')} style={styles.settingRow}><View style={styles.settingIcon}><Icon name="users" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>اعضای خانواده و امتیازها</Text><Text style={styles.settingSub}>دعوت، لیدربرد و کامنت‌ها</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable><Pressable onPress={() => navigate('receipts')} style={styles.settingRow}><View style={styles.settingIcon}><Icon name="receipt" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>رسیدها و گزارش هزینه</Text><Text style={styles.settingSub}>OCR و نمودار ماهانه</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable><Pressable onPress={exportBackup} style={styles.settingRow}><View style={styles.settingIcon}><Icon name="cloud" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>پشتیبان‌گیری آفلاین</Text><Text style={styles.settingSub}>خروجی JSON از لیست‌ها و تنظیمات</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable><Pressable onPress={() => setModal('contact')} style={styles.settingRow}><View style={styles.settingIcon}><Text style={styles.settingIconText}>💬</Text></View><View style={styles.settingMain}><Text style={styles.settingTitle}>ارتباط با ما</Text><Text style={styles.settingSub}>پشتیبانی توسط NziCode</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable></View>
+      <View style={styles.settingsCard}><Pressable onPress={() => navigate('family')} style={styles.settingRow}><View style={styles.settingIcon}><Icon name="users" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>اعضای خانواده و امتیازها</Text><Text style={styles.settingSub}>دعوت، لیدربرد و کامنت‌ها</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable><Pressable onPress={() => navigate('receipts')} style={styles.settingRow}><View style={styles.settingIcon}><Icon name="receipt" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>رسیدها و گزارش هزینه</Text><Text style={styles.settingSub}>OCR و نمودار ماهانه</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable><Pressable onPress={exportBackup} style={styles.settingRow}><View style={styles.settingIcon}><Icon name="cloud" color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>پشتیبان‌گیری آفلاین</Text><Text style={styles.settingSub}>خروجی JSON از لیست‌ها و تنظیمات</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable><Pressable onPress={() => setModal('contact')} style={styles.settingRow}><View style={styles.settingIcon}><Glyph value="comment" size={16} color={THEME.primary} /></View><View style={styles.settingMain}><Text style={styles.settingTitle}>ارتباط با ما</Text><Text style={styles.settingSub}>پشتیبانی توسط NziCode</Text></View><Icon name="chevron" color={THEME.faint} /></Pressable></View>
       <Pressable onPress={resetData} style={styles.resetRow}><Icon name="trash" color={THEME.danger} /><Text style={styles.resetText}>پاک‌کردن اطلاعات محلی</Text></Pressable>
       <Text style={styles.versionText}>خریدیار ۱.۰ · طراحی و توسعه NziCode</Text>
     </>
@@ -1145,10 +1160,10 @@ const styles = StyleSheet.create({
   avatarText: { fontSize: 23 },
   iconButton: { minWidth: 38, height: 38, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
   statsRow: { flexDirection: 'row-reverse', gap: 10, marginBottom: 18 },
-  statCard: { flex: 1, backgroundColor: THEME.surface, borderRadius: 18, padding: 14, alignItems: 'flex-end', borderWidth: 1, borderColor: THEME.line },
+  statCard: { flex: 1, backgroundColor: THEME.surface, borderRadius: 20, padding: 14, alignItems: 'flex-end', borderWidth: 1, borderColor: THEME.line },
   statNumber: { fontFamily: FONT, color: THEME.primary, fontSize: 22, fontWeight: '800' },
   statLabel: { fontFamily: FONT, color: THEME.muted, fontSize: 12, marginTop: 3 },
-  smartCard: { backgroundColor: THEME.dark, borderRadius: 24, padding: 19, marginBottom: 25 },
+  smartCard: { backgroundColor: THEME.dark, borderRadius: 26, padding: 19, marginBottom: 25 },
   smartHeader: { flexDirection: 'row-reverse', alignItems: 'center' },
   smartIcon: { width: 42, height: 42, borderRadius: 15, backgroundColor: THEME.primary, alignItems: 'center', justifyContent: 'center' },
   smartHeaderText: { flex: 1, alignItems: 'flex-end', marginHorizontal: 11 },
@@ -1158,11 +1173,18 @@ const styles = StyleSheet.create({
   smartText: { fontFamily: FONT, color: '#D7D2EE', fontSize: 13, lineHeight: 23, textAlign: 'right', marginTop: 13 },
   smartAction: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 14, paddingVertical: 7 },
   smartActionText: { fontFamily: FONT, color: '#fff', fontSize: 13, fontWeight: '700' },
-  sectionTitleRow: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', marginBottom: 11, marginTop: 4 },
+  sectionTitleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 11, marginTop: 4 },
   sectionTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 17, fontWeight: '800', textAlign: 'right' },
   sectionAction: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   sectionActionText: { fontFamily: FONT, color: THEME.primary, fontSize: 12, fontWeight: '700' },
-  horizontalCards: { flexDirection: 'row-reverse', gap: 12, paddingBottom: 7 },
+  // App.js otherwise assumes an LTR base direction and mirrors layout
+  // manually with flexDirection: 'row-reverse'. Horizontally-scrollable
+  // rows are the one exception: a row-reverse *scroll* container still
+  // starts its scroll position at the left in an LTR document, clipping
+  // the visually-first (rightmost) card. Scoping direction: 'rtl' to just
+  // these scroll containers makes the browser anchor scrolling to the
+  // right, matching the row-reverse content.
+  horizontalCards: { flexDirection: 'row', gap: 12, paddingBottom: 7 },
   listCard: { width: 225, backgroundColor: THEME.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: THEME.line },
   listCardTop: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
   listEmoji: { fontSize: 29 },
@@ -1172,16 +1194,17 @@ const styles = StyleSheet.create({
   progressFill: { height: '100%', borderRadius: 6 },
   listCardBottom: { flexDirection: 'row-reverse', justifyContent: 'space-between', marginTop: 9 },
   listPercent: { fontFamily: FONT, fontSize: 11, color: THEME.primary, fontWeight: '700' },
+  memberCountRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 4 },
   memberCount: { fontFamily: FONT, color: THEME.muted, fontSize: 11 },
   newListCard: { alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed', borderColor: '#BDB9F1' },
-  newListCircle: { width: 47, height: 47, borderRadius: 18, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  newListCircle: { width: 47, height: 47, borderRadius: 20, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center' },
   newListText: { fontFamily: FONT, color: THEME.primary, fontSize: 15, fontWeight: '800', marginTop: 11 },
   quickGrid: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 10, marginBottom: 18 },
-  quickCard: { width: '48.5%', backgroundColor: THEME.surface, borderRadius: 19, padding: 14, borderWidth: 1, borderColor: THEME.line },
+  quickCard: { width: '48.5%', backgroundColor: THEME.surface, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: THEME.line },
   quickIcon: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
   quickTitle: { fontFamily: FONT, fontSize: 14, fontWeight: '800', color: THEME.ink, textAlign: 'right' },
   quickSub: { fontFamily: FONT, color: THEME.muted, fontSize: 11, textAlign: 'right', marginTop: 3 },
-  tipCard: { flexDirection: 'row-reverse', alignItems: 'center', gap: 11, backgroundColor: '#FFFDF2', borderRadius: 18, padding: 14, borderWidth: 1, borderColor: '#F5E9B2' },
+  tipCard: { flexDirection: 'row-reverse', alignItems: 'center', gap: 11, backgroundColor: '#FFFDF2', borderRadius: 20, padding: 14, borderWidth: 1, borderColor: '#F5E9B2' },
   tipEmoji: { fontSize: 25 },
   tipMain: { flex: 1, alignItems: 'flex-end' },
   tipTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 13, fontWeight: '800' },
@@ -1197,14 +1220,14 @@ const styles = StyleSheet.create({
   roundPrimary: { width: 42, height: 42, borderRadius: 15, backgroundColor: THEME.primary, alignItems: 'center', justifyContent: 'center' },
   searchBox: { minHeight: 48, backgroundColor: THEME.surface, borderRadius: 15, borderWidth: 1, borderColor: THEME.line, flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 13, marginBottom: 13 },
   searchInput: { flex: 1, fontFamily: FONT, color: THEME.ink, fontSize: 13, paddingVertical: 9, marginRight: 7 },
-  fullListCard: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 19, padding: 15, marginBottom: 10, borderWidth: 1, borderColor: THEME.line },
+  fullListCard: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 20, padding: 15, marginBottom: 10, borderWidth: 1, borderColor: THEME.line },
   fullListEmoji: { fontSize: 31, marginLeft: 13 },
   fullListMain: { flex: 1 },
-  fullListTitleRow: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
+  fullListTitleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   fullListName: { fontFamily: FONT, color: THEME.ink, fontSize: 15, fontWeight: '800' },
   fullListMeta: { fontFamily: FONT, color: THEME.muted, fontSize: 11, textAlign: 'right', marginTop: 4 },
   fullListPercent: { fontFamily: FONT, color: THEME.primary, fontSize: 12, fontWeight: '800', marginRight: 10 },
-  historyCallout: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.primarySoft, borderRadius: 18, padding: 14, marginTop: 12 },
+  historyCallout: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.primarySoft, borderRadius: 20, padding: 14, marginTop: 12 },
   historyCalloutIcon: { width: 39, height: 39, borderRadius: 13, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
   historyCalloutMain: { flex: 1, alignItems: 'flex-end', marginHorizontal: 10 },
   historyCalloutTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 13, fontWeight: '800' },
@@ -1216,7 +1239,7 @@ const styles = StyleSheet.create({
   addInputText: { fontFamily: FONT, color: THEME.faint, fontSize: 12, flex: 1, textAlign: 'right' },
   shoppingButton: { minHeight: 48, borderRadius: 15, backgroundColor: THEME.dark, flexDirection: 'row-reverse', alignItems: 'center', gap: 5, paddingHorizontal: 15 },
   shoppingButtonText: { fontFamily: FONT, color: '#fff', fontSize: 12, fontWeight: '800' },
-  categoryScroll: { flexDirection: 'row-reverse', gap: 7, paddingBottom: 13 },
+  categoryScroll: { flexDirection: 'row', gap: 7, paddingBottom: 13 },
   pill: { minHeight: 35, borderRadius: 14, backgroundColor: THEME.surface, borderWidth: 1, borderColor: THEME.line, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12, gap: 5 },
   pillActive: { backgroundColor: THEME.primarySoft, borderColor: '#D3CEFF' },
   pillText: { fontFamily: FONT, color: THEME.muted, fontSize: 11 },
@@ -1229,7 +1252,7 @@ const styles = StyleSheet.create({
   groupCount: { fontFamily: FONT, color: THEME.faint, fontSize: 11 },
   itemRow: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 16, padding: 12, marginBottom: 7, borderWidth: 1, borderColor: THEME.line },
   itemRowDone: { backgroundColor: '#FBFBFD', opacity: 0.7 },
-  checkCircle: { width: 25, height: 25, borderRadius: 9, borderWidth: 1.5, borderColor: '#C6C9D7', alignItems: 'center', justifyContent: 'center' },
+  checkCircle: { width: 24, height: 24, borderRadius: 6, borderWidth: 1.5, borderColor: '#C6C9D7', alignItems: 'center', justifyContent: 'center' },
   checkCircleDone: { backgroundColor: THEME.success, borderColor: THEME.success },
   itemEmoji: { fontSize: 22, marginHorizontal: 10 },
   itemMain: { flex: 1, alignItems: 'flex-end' },
@@ -1244,17 +1267,17 @@ const styles = StyleSheet.create({
   totalProgressText: { fontFamily: FONT, color: '#D9D4ED', fontSize: 10, textAlign: 'right', marginBottom: 3 },
   finishButton: { flexDirection: 'row-reverse', alignItems: 'center', gap: 4, backgroundColor: THEME.success, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 11 },
   finishButtonText: { fontFamily: FONT, color: '#fff', fontSize: 11, fontWeight: '800' },
-  scannerHero: { backgroundColor: THEME.dark, borderRadius: 24, padding: 15, alignItems: 'center', marginBottom: 23 },
-  scannerFrame: { width: '100%', height: 205, borderRadius: 18, borderWidth: 1.5, borderColor: '#8981C7', borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center', backgroundColor: '#302B50', marginBottom: 14 },
+  scannerHero: { backgroundColor: THEME.dark, borderRadius: 26, padding: 15, alignItems: 'center', marginBottom: 23 },
+  scannerFrame: { width: '100%', height: 205, borderRadius: 20, borderWidth: 1.5, borderColor: '#8981C7', borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center', backgroundColor: '#302B50', marginBottom: 14 },
   scannerFrameText: { fontFamily: FONT, color: '#D8D3ED', fontSize: 13, marginTop: 10 },
   demoNote: { fontFamily: FONT, color: '#AAA4C8', fontSize: 10, marginTop: 11, textAlign: 'center' },
-  scanResultRow: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 17, padding: 13, marginBottom: 8, borderWidth: 1, borderColor: THEME.line },
+  scanResultRow: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 20, padding: 13, marginBottom: 8, borderWidth: 1, borderColor: THEME.line },
   scanResultEmoji: { fontSize: 27, marginLeft: 11 },
   scanResultMain: { flex: 1, alignItems: 'flex-end' },
   scanResultName: { fontFamily: FONT, color: THEME.ink, fontSize: 14, fontWeight: '800' },
   scanResultMeta: { fontFamily: FONT, color: THEME.muted, fontSize: 10, marginTop: 3 },
   addSmall: { width: 35, height: 35, borderRadius: 12, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center', marginRight: 9 },
-  scanTips: { backgroundColor: '#FFFDF2', borderRadius: 17, padding: 14, marginTop: 10, borderWidth: 1, borderColor: '#F5E9B2' },
+  scanTips: { backgroundColor: '#FFFDF2', borderRadius: 20, padding: 14, marginTop: 10, borderWidth: 1, borderColor: '#F5E9B2' },
   scanTipsTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 13, fontWeight: '800', textAlign: 'right', marginBottom: 6 },
   scanTip: { fontFamily: FONT, color: THEME.muted, fontSize: 11, lineHeight: 21, textAlign: 'right' },
   shoppingWrap: { flex: 1 },
@@ -1270,7 +1293,7 @@ const styles = StyleSheet.create({
   stopDot: { width: 17, height: 17, borderRadius: 8.5, backgroundColor: '#fff', borderWidth: 3, borderColor: '#C8C4EE' },
   stopDotActive: { borderColor: THEME.primary, backgroundColor: THEME.primarySoft },
   stopLabel: { fontFamily: FONT, color: THEME.muted, fontSize: 11 },
-  currentItemCard: { backgroundColor: THEME.surface, borderRadius: 24, padding: 22, alignItems: 'center', borderWidth: 1, borderColor: THEME.line },
+  currentItemCard: { backgroundColor: THEME.surface, borderRadius: 26, padding: 22, alignItems: 'center', borderWidth: 1, borderColor: THEME.line },
   currentEyebrow: { fontFamily: FONT, color: THEME.primary, fontSize: 11, fontWeight: '800' },
   currentEmoji: { fontSize: 70, marginVertical: 13 },
   currentName: { fontFamily: FONT, color: THEME.ink, fontSize: 24, fontWeight: '900' },
@@ -1282,15 +1305,15 @@ const styles = StyleSheet.create({
   skipButtonText: { fontFamily: FONT, color: THEME.muted, fontSize: 13, fontWeight: '800' },
   doneButtonLarge: { flex: 2, minHeight: 52, borderRadius: 16, backgroundColor: THEME.success, flexDirection: 'row-reverse', gap: 7, alignItems: 'center', justifyContent: 'center' },
   doneButtonText: { fontFamily: FONT, color: '#fff', fontSize: 14, fontWeight: '800' },
-  shoppingBottom: { backgroundColor: THEME.dark, borderRadius: 19, padding: 14, marginTop: 13, flexDirection: 'row-reverse', alignItems: 'center', gap: 13 },
+  shoppingBottom: { backgroundColor: THEME.dark, borderRadius: 20, padding: 14, marginTop: 13, flexDirection: 'row-reverse', alignItems: 'center', gap: 13 },
   shoppingBottomLabel: { fontFamily: FONT, color: '#C7C1E3', fontSize: 10 },
   shoppingBottomValue: { fontFamily: FONT, color: '#fff', fontSize: 14, fontWeight: '800', marginTop: 2 },
-  pantrySummary: { backgroundColor: THEME.surface, borderRadius: 20, padding: 16, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: THEME.line, marginBottom: 14 },
+  pantrySummary: { backgroundColor: THEME.surface, borderRadius: 20, padding: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: THEME.line, marginBottom: 14 },
   pantrySummaryLabel: { fontFamily: FONT, color: THEME.muted, fontSize: 11, textAlign: 'right' },
   pantrySummaryNumber: { fontFamily: FONT, color: THEME.ink, fontSize: 27, fontWeight: '900', textAlign: 'right', marginTop: 2 },
   pantryLegend: { alignItems: 'flex-end', gap: 4 },
   legendItem: { fontFamily: FONT, color: THEME.muted, fontSize: 10 },
-  pantryRow: { flexDirection: 'row-reverse', alignItems: 'center', borderRadius: 18, padding: 13, marginBottom: 8, borderWidth: 1 },
+  pantryRow: { flexDirection: 'row-reverse', alignItems: 'center', borderRadius: 20, padding: 13, marginBottom: 8, borderWidth: 1 },
   pantryDanger: { backgroundColor: THEME.dangerSoft, borderColor: '#F7C8CC' },
   pantryWarning: { backgroundColor: THEME.warningSoft, borderColor: '#F6E1A0' },
   pantrySuccess: { backgroundColor: THEME.successSoft, borderColor: '#BDEDD9' },
@@ -1325,7 +1348,7 @@ const styles = StyleSheet.create({
   familyHeroEmoji: { fontSize: 31 },
   familyHeroTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 14, fontWeight: '800', textAlign: 'right' },
   familyHeroText: { fontFamily: FONT, color: THEME.muted, fontSize: 10, lineHeight: 17, textAlign: 'right', marginTop: 2 },
-  leaderboard: { backgroundColor: THEME.surface, borderRadius: 19, borderWidth: 1, borderColor: THEME.line, paddingHorizontal: 13, marginBottom: 18 },
+  leaderboard: { backgroundColor: THEME.surface, borderRadius: 20, borderWidth: 1, borderColor: THEME.line, paddingHorizontal: 13, marginBottom: 18 },
   leaderRow: { minHeight: 52, flexDirection: 'row-reverse', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: THEME.line, gap: 9 },
   leaderRowLast: { borderBottomWidth: 0 },
   leaderRank: { width: 22, fontFamily: FONT, color: THEME.primary, fontSize: 13, fontWeight: '900', textAlign: 'center' },
@@ -1336,7 +1359,7 @@ const styles = StyleSheet.create({
   badgeCard: { flex: 1, backgroundColor: THEME.surface, borderRadius: 16, borderWidth: 1, borderColor: THEME.line, alignItems: 'center', paddingVertical: 12 },
   badgeEmoji: { fontSize: 27 },
   badgeLabel: { fontFamily: FONT, color: THEME.muted, fontSize: 10, textAlign: 'center', marginTop: 6 },
-  commentCard: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 17, padding: 13, borderWidth: 1, borderColor: THEME.line },
+  commentCard: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 20, padding: 13, borderWidth: 1, borderColor: THEME.line },
   commentEmoji: { fontSize: 23 },
   commentMain: { flex: 1, alignItems: 'flex-end', marginHorizontal: 9 },
   commentName: { fontFamily: FONT, color: THEME.ink, fontSize: 12, fontWeight: '800' },
@@ -1345,12 +1368,12 @@ const styles = StyleSheet.create({
   commentInput: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 15, borderWidth: 1, borderColor: THEME.line, paddingHorizontal: 10, marginTop: 8 },
   commentTextInput: { flex: 1, fontFamily: FONT, color: THEME.ink, fontSize: 11, minHeight: 43 },
   profileCard: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 20, padding: 15, borderWidth: 1, borderColor: THEME.line, marginBottom: 21 },
-  profileAvatar: { width: 53, height: 53, borderRadius: 18, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  profileAvatar: { width: 53, height: 53, borderRadius: 20, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center' },
   profileAvatarText: { fontSize: 28 },
   profileMain: { flex: 1, alignItems: 'flex-end', marginHorizontal: 11 },
   profileName: { fontFamily: FONT, color: THEME.ink, fontSize: 17, fontWeight: '900' },
   profileMeta: { fontFamily: FONT, color: THEME.muted, fontSize: 11, marginTop: 3 },
-  settingsCard: { backgroundColor: THEME.surface, borderRadius: 19, borderWidth: 1, borderColor: THEME.line, paddingHorizontal: 13, marginBottom: 19 },
+  settingsCard: { backgroundColor: THEME.surface, borderRadius: 20, borderWidth: 1, borderColor: THEME.line, paddingHorizontal: 13, marginBottom: 19 },
   settingRow: { minHeight: 65, flexDirection: 'row-reverse', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: THEME.line, gap: 10 },
   settingRowLast: { borderBottomWidth: 0 },
   settingIcon: { width: 36, height: 36, borderRadius: 12, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center' },
@@ -1365,7 +1388,7 @@ const styles = StyleSheet.create({
   resetRow: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 7, paddingVertical: 14 },
   resetText: { fontFamily: FONT, color: THEME.danger, fontSize: 12, fontWeight: '700' },
   versionText: { fontFamily: FONT, color: THEME.faint, fontSize: 10, textAlign: 'center', marginTop: 2 },
-  bottomNav: { position: 'absolute', left: 14, right: 14, bottom: 12, minHeight: 70, backgroundColor: '#fff', borderRadius: 22, borderWidth: 1, borderColor: THEME.line, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 5, shadowColor: '#28243E', shadowOpacity: 0.1, shadowRadius: 16, shadowOffset: { width: 0, height: 7 }, elevation: 8 },
+  bottomNav: { position: 'absolute', left: 14, right: 14, bottom: 12, minHeight: 70, backgroundColor: '#fff', borderRadius: 20, borderWidth: 1, borderColor: THEME.line, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 5, shadowColor: '#14151F', shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 4 },
   navItem: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 2 },
   navItemActive: {},
   navIcon: { width: 34, height: 30, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
@@ -1387,7 +1410,7 @@ const styles = StyleSheet.create({
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(22,20,38,0.48)', justifyContent: 'flex-end' },
   modalSheet: { maxHeight: '91%', backgroundColor: THEME.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 9, paddingBottom: Platform.OS === 'ios' ? 28 : 18 },
   modalHandle: { width: 42, height: 4, borderRadius: 2, backgroundColor: '#D0D2DD', alignSelf: 'center', marginBottom: 13 },
-  modalTitleRow: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
+  modalTitleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
   modalTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 18, fontWeight: '900' },
   closeButton: { width: 35, height: 35, borderRadius: 12, backgroundColor: THEME.surface, alignItems: 'center', justifyContent: 'center' },
   input: { minHeight: 48, backgroundColor: THEME.surface, borderRadius: 14, borderWidth: 1, borderColor: THEME.line, paddingHorizontal: 13, fontFamily: FONT, color: THEME.ink, fontSize: 13, marginBottom: 10 },
@@ -1396,7 +1419,7 @@ const styles = StyleSheet.create({
   priceInput: { flex: 1.6 },
   fieldLabel: { fontFamily: FONT, color: THEME.ink, fontSize: 12, fontWeight: '800', textAlign: 'right', marginTop: 7, marginBottom: 8 },
   choiceRow: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 7, marginBottom: 5 },
-  horizontalChoices: { flexDirection: 'row-reverse', gap: 7, paddingBottom: 5 },
+  horizontalChoices: { flexDirection: 'row', gap: 7, paddingBottom: 5 },
   authRow: { flexDirection: 'row-reverse', gap: 7, marginBottom: 2 },
   authButton: { flex: 1, minHeight: 52, borderRadius: 14, backgroundColor: THEME.background, borderWidth: 1, borderColor: THEME.line, alignItems: 'center', justifyContent: 'center', gap: 2 },
   authButtonActive: { backgroundColor: THEME.primarySoft, borderColor: '#D1CCFF' },
@@ -1412,11 +1435,11 @@ const styles = StyleSheet.create({
   skipButton: { alignItems: 'center', paddingVertical: 13 },
   skipText: { fontFamily: FONT, color: THEME.muted, fontSize: 11 },
   onboarding: { flexGrow: 1, alignItems: 'center', paddingHorizontal: 20, paddingTop: 32, paddingBottom: 24 },
-  brandMark: { width: 78, height: 78, borderRadius: 28, backgroundColor: THEME.primary, alignItems: 'center', justifyContent: 'center', shadowColor: THEME.primary, shadowOpacity: 0.25, shadowRadius: 15, shadowOffset: { width: 0, height: 8 }, elevation: 8 },
+  brandMark: { width: 78, height: 78, borderRadius: 26, backgroundColor: THEME.primary, alignItems: 'center', justifyContent: 'center' },
   brandMarkText: { fontSize: 39 },
   brandName: { fontFamily: FONT, color: THEME.ink, fontSize: 30, fontWeight: '900', marginTop: 14 },
   brandTagline: { fontFamily: FONT, color: THEME.muted, fontSize: 13, marginTop: 4, textAlign: 'center' },
-  onboardingCard: { width: '100%', maxWidth: 520, backgroundColor: THEME.surface, borderRadius: 25, padding: 20, marginTop: 26, borderWidth: 1, borderColor: THEME.line },
+  onboardingCard: { width: '100%', maxWidth: 520, backgroundColor: THEME.surface, borderRadius: 26, padding: 20, marginTop: 26, borderWidth: 1, borderColor: THEME.line },
   onboardingTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 22, fontWeight: '900', textAlign: 'right' },
   onboardingText: { fontFamily: FONT, color: THEME.muted, fontSize: 12, textAlign: 'right', marginTop: 4, marginBottom: 11 },
   onboardingFoot: { fontFamily: FONT, color: THEME.faint, fontSize: 10, marginTop: 22 },
@@ -1425,8 +1448,8 @@ const styles = StyleSheet.create({
   entryTabActive: { backgroundColor: THEME.surface },
   entryTabText: { fontFamily: FONT, color: THEME.muted, fontSize: 10 },
   entryTabTextActive: { color: THEME.primary, fontWeight: '800' },
-  capturePanel: { alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 18, padding: 21, borderWidth: 1, borderColor: THEME.line, marginBottom: 12 },
-  captureIcon: { width: 72, height: 72, borderRadius: 25, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
+  capturePanel: { alignItems: 'center', backgroundColor: THEME.surface, borderRadius: 20, padding: 21, borderWidth: 1, borderColor: THEME.line, marginBottom: 12 },
+  captureIcon: { width: 72, height: 72, borderRadius: 26, backgroundColor: THEME.primarySoft, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
   captureTitle: { fontFamily: FONT, color: THEME.ink, fontSize: 16, fontWeight: '900' },
   captureText: { fontFamily: FONT, color: THEME.muted, fontSize: 11, textAlign: 'center', lineHeight: 19, marginTop: 5, marginBottom: 13 },
   infoBanner: { flexDirection: 'row-reverse', alignItems: 'center', gap: 6, backgroundColor: THEME.primarySoft, borderRadius: 13, padding: 10, marginBottom: 10 },
@@ -1452,7 +1475,7 @@ const styles = StyleSheet.create({
   historyName: { fontFamily: FONT, color: THEME.ink, fontSize: 12, fontWeight: '800' },
   historyMeta: { fontFamily: FONT, color: THEME.muted, fontSize: 10, marginTop: 3 },
   historyTotal: { fontFamily: FONT, color: THEME.primary, fontSize: 11, fontWeight: '800' },
-  contactBrand: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.primarySoft, borderRadius: 17, padding: 13, marginBottom: 10 },
+  contactBrand: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: THEME.primarySoft, borderRadius: 20, padding: 13, marginBottom: 10 },
   brandMini: { width: 42, height: 42, borderRadius: 14, backgroundColor: THEME.primary, alignItems: 'center', justifyContent: 'center' },
   brandMiniText: { color: '#fff', fontFamily: FONT, fontSize: 22, fontWeight: '900' },
   contactName: { fontFamily: FONT, color: THEME.ink, fontSize: 15, fontWeight: '900', textAlign: 'right' },
@@ -1463,7 +1486,7 @@ const styles = StyleSheet.create({
   contactLabel: { fontFamily: FONT, color: THEME.ink, fontSize: 12, fontWeight: '800' },
   contactValue: { fontFamily: FONT, color: THEME.muted, fontSize: 10, marginTop: 2 },
   choiceList: { paddingBottom: 8 },
-  choiceListRow: { minHeight: 51, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', backgroundColor: THEME.surface, borderRadius: 14, paddingHorizontal: 13, marginBottom: 7 },
+  choiceListRow: { minHeight: 51, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: THEME.surface, borderRadius: 14, paddingHorizontal: 13, marginBottom: 7 },
   choiceListText: { fontFamily: FONT, color: THEME.ink, fontSize: 13, textAlign: 'right' },
   radio: { width: 23, height: 23, borderRadius: 12, borderWidth: 1.5, borderColor: '#C8CBD8', alignItems: 'center', justifyContent: 'center' },
   radioActive: { backgroundColor: THEME.primary, borderColor: THEME.primary },

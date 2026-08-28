@@ -24,6 +24,11 @@ if (fs.existsSync(indexPath)) {
     .replace(/src="\/_expo\//g, 'src="./_expo/')
     .replace(/href="\/_expo\//g, 'href="./_expo/')
     .replace(/<title>[^<]*<\/title>/, '<title>خریدیار</title>')
+    // Native RTL (dir="rtl") is required: the app's many
+    // flexDirection: 'row-reverse' layouts were authored assuming an RTL
+    // base direction (row already flows right-to-left, row-reverse flips
+    // specific rows back to left-to-right on purpose). Forcing ltr here
+    // breaks those layouts.
     .replace(/<html lang="en">/g, '<html lang="fa" dir="rtl">');
   fs.writeFileSync(indexPath, html);
 }
