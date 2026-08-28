@@ -53,7 +53,11 @@ jobs:
           # adaptive icon defined in mipmap-anydpi-v26 instead, so without
           # replacing ic_launcher_foreground too, the app keeps showing the
           # default Capacitor icon on virtually every modern device.
-          echo '<?xml version="1.0" encoding="utf-8"?><color xmlns:android="http://schemas.android.com/apk/res/android" name="ic_launcher_background">#FFFFFF</color>' \
+          printf '%s\n' \
+            '<?xml version="1.0" encoding="utf-8"?>' \
+            '<resources>' \
+            '    <color name="ic_launcher_background">#FFFFFF</color>' \
+            '</resources>' \
             > android/app/src/main/res/values/ic_launcher_background.xml
 
       - name: Setup Gradle
