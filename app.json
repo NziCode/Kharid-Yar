@@ -6,10 +6,25 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "splash": { "backgroundColor": "#F7F8FC" },
-    "android": { "package": "com.kharidyar.app" },
-    "ios": { "bundleIdentifier": "com.kharidyar.app" },
-    "extra": { "eas": { "projectId": "2dcb0da4-43e8-4687-8d5c-f8c2c73b8e84" } },
+    "splash": {
+      "backgroundColor": "#F7F8FC"
+    },
+    "android": {
+      "package": "com.kharidyar.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/app-icon.png",
+        "backgroundColor": "#6554E8"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.kharidyar.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2dcb0da4-43e8-4687-8d5c-f8c2c73b8e84"
+      }
+    },
     "owner": "nzicode"
   }
 }
