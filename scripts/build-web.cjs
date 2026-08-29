@@ -28,23 +28,15 @@ if (fs.existsSync(indexPath)) {
     // flexDirection: 'row-reverse' layouts were authored assuming an RTL
     // base direction (row already flows right-to-left, row-reverse flips
     // specific rows back to left-to-right on purpose). Forcing ltr here
-    // breaks those layouts.
+    // breaks those layouts. The app itself flips this at runtime once the
+    // user picks English (see App.js's direction useEffect).
     .replace(/<html lang="en">/g, '<html lang="fa" dir="rtl">');
   fs.writeFileSync(indexPath, html);
 }
 
-const fontDir = path.join(dist, 'assets', 'fonts');
-fs.mkdirSync(fontDir, { recursive: true });
-for (const file of ['Vazirmatn-Regular.ttf', 'Vazirmatn-Bold.ttf']) {
-  fs.copyFileSync(path.join(root, 'assets', 'fonts', file), path.join(fontDir, file));
-}
+// Fonts live in /public/fonts and are referenced as absolute "/fonts/..."
+// URLs in web-fonts.css. `expo export` copies /public into dist/ as-is, so
+// no manual copying or path-rewriting is needed here (unlike the old
+// assets/fonts/ setup, which 404'd in `expo start --web` dev mode because
+// only /public is served at the site root).
 
-const cssDir = path.join(dist, '_expo', 'static', 'css');
-if (fs.existsSync(cssDir)) {
-  for (const file of fs.readdirSync(cssDir).filter((name) => name.endsWith('.css'))) {
-    const cssPath = path.join(cssDir, file);
-    const css = fs.readFileSync(cssPath, 'utf8')
-      .replace(/url\(["']?\/assets\/fonts\//g, 'url("../../../assets/fonts/');
-    fs.writeFileSync(cssPath, css);
-  }
-}

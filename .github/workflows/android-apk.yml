@@ -42,6 +42,10 @@ jobs:
           npx cap add android
           npx cap copy android
           sed -i -E "s/versionCode [0-9]+/versionCode $((GITHUB_RUN_NUMBER + 1))/g" android/app/build.gradle
+          # Voice item-entry uses the browser SpeechRecognition API, which
+          # needs microphone access inside the WebView — without this
+          # permission, Android silently denies every mic request.
+          sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.RECORD_AUDIO" />#' android/app/src/main/AndroidManifest.xml
           for dpi in mipmap-hdpi mipmap-mdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
             dir="android/app/src/main/res/$dpi"
             mkdir -p "$dir"

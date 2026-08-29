@@ -16,6 +16,7 @@
     "@capacitor/core": "^7.4.0",
     "@expo/metro-runtime": "~5.0.5",
     "@expo/vector-icons": "^15.1.1",
+    "@supabase/supabase-js": "^2.112.4",
     "expo": "~53.0.0",
     "expo-asset": "^57.0.15",
     "expo-font": "^57.0.2",
